@@ -1,4 +1,5 @@
 ﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 //
 // Purpose: The hands used by the player in the vr interaction system
 //
@@ -78,7 +79,7 @@ namespace Valve.VR.InteractionSystem
         public GameObject renderModelPrefab;
         [HideInInspector]
         public List<RenderModel> renderModels = new List<RenderModel>();
-        [HideInInspector]
+        // [HideInInspector]
         public RenderModel mainRenderModel;
         [HideInInspector]
         public RenderModel hoverhighlightRenderModel;
