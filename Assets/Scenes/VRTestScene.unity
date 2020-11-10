@@ -811,6 +811,7 @@ Transform:
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &533997223
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,6 +912,8 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 848138429}
   m_PrefabAsset: {fileID: 0}
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 --- !u!1 &612007476
 GameObject:
@@ -1113,6 +1116,7 @@ Transform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &733699596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,6 +1243,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &848138429
 =======
 --- !u!1001 &748763286
@@ -1689,6 +1695,7 @@ Transform:
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --- !u!1 &1355511465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1783,6 +1790,8 @@ Transform:
   m_Father: {fileID: 750479949}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+>>>>>>> Stashed changes
 --- !u!1 &1672442832
 =======
 --- !u!1 &1327411289
