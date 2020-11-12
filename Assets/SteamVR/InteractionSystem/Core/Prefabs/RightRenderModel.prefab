@@ -45,6 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 1000010184414672, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
   displayHandByDefault: 1
-  controllerPrefab: {fileID: 7152995178661351175, guid: 56fee1a9a0e23ea438b8e86fc90e8b4a,
+  controllerPrefab: {fileID: 7152995178661351175, guid: 00f829159f236ef4f848927f1c04b005,
     type: 3}
-  displayControllerByDefault: 0
+  displayControllerByDefault: 1
