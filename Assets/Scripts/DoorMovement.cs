@@ -27,6 +27,7 @@ public class DoorMovement : MonoBehaviour
         {
             anim.Play("openDoor");
             _isOpen = true;
+            SoundManager.PlaySound("doorOpen");
         }
         // Later: Door not closed by participant but at the end of the trial.
         //else if (SteamVR_Input.GetState("GrabGrip", hand.handType) && _isOpen && _isHoveredOver)
@@ -34,6 +35,7 @@ public class DoorMovement : MonoBehaviour
         {
             anim.Play("closeDoor");
             _isOpen = false;
+            SoundManager.PlaySound("doorClose");
         }
     }
 
