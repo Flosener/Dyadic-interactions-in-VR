@@ -71,6 +71,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # added later on
-.DS_Store
+*.DS_Store
 *.xml
 *.iml
+*.sln
+*.csproj
