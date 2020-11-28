@@ -22,16 +22,16 @@ public class DoorMovement : MonoBehaviour
     
     void Update()
     {
-        //if (SteamVR_Input.GetState("GrabGrip", hand.handType) && !_isOpen && _isHoveredOver)
-        if (Input.GetMouseButtonDown(0) && !_isOpen && _isHoveredOver)
+        if (SteamVR_Input.GetState("GrabGrip", hand.handType) && !_isOpen && _isHoveredOver)
+        //if (Input.GetMouseButtonDown(0) && !_isOpen && _isHoveredOver)
         {
             anim.Play("openDoor");
             _isOpen = true;
             SoundManager.PlaySound("doorOpen");
         }
         // Later: Door not closed by participant but at the end of the trial.
-        //else if (SteamVR_Input.GetState("GrabGrip", hand.handType) && _isOpen && _isHoveredOver)
-        else if (Input.GetMouseButtonDown(0) && _isOpen && _isHoveredOver)
+        else if (SteamVR_Input.GetState("GrabGrip", hand.handType) && _isOpen && _isHoveredOver)
+        //else if (Input.GetMouseButtonDown(0) && _isOpen && _isHoveredOver)
         {
             anim.Play("closeDoor");
             _isOpen = false;

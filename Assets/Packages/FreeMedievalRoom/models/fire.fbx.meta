@@ -1,88 +1,242 @@
 fileFormatVersion: 2
 guid: e5bebf0a45f060d4c90b627593524d02
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: book case.005
-    100002: book case.006
-    100004: chare.002
-    100006: Cylinder.017
-    100008: door_room_1
-    100010: //RootNode
-    100012: g
-    100014: medieavel-window.001
-    100016: pillers
-    100018: room
-    100020: Sphere.000
-    100022: tabel
-    100024: windowglass.001
-    400000: book case.005
-    400002: book case.006
-    400004: chare.002
-    400006: Cylinder.017
-    400008: door_room_1
-    400010: //RootNode
-    400012: g
-    400014: medieavel-window.001
-    400016: pillers
-    400018: room
-    400020: Sphere.000
-    400022: tabel
-    400024: windowglass.001
-    2100000: No Name
-    2100002: A01
-    2100004: Material.045
-    2100006: wall_stone_brick.002
-    2100008: ground tiles.002
-    2100010: wood the tabel and chaer.009
-    2100012: wood the tabel and chaer.008
-    2100014: door.002
-    2100016: booksonthecase.013
-    2100018: bookcasewood.007
-    2100020: glass.001
-    2100022: pilers
-    2100024: border.001
-    2300000: book case.005
-    2300002: book case.006
-    2300004: chare.002
-    2300006: Cylinder.017
-    2300008: door_room_1
-    2300010: g
-    2300012: medieavel-window.001
-    2300014: pillers
-    2300016: room
-    2300018: Sphere.000
-    2300020: tabel
-    2300022: windowglass.001
-    2300024: //RootNode
-    3300000: book case.005
-    3300002: book case.006
-    3300004: chare.002
-    3300006: Cylinder.017
-    3300008: door_room_1
-    3300010: g
-    3300012: medieavel-window.001
-    3300014: pillers
-    3300016: room
-    3300018: Sphere.000
-    3300020: tabel
-    3300022: windowglass.001
-    3300024: //RootNode
-    4300000: Sphere.000
-    4300002: Cylinder.017
-    4300004: room
-    4300006: g
-    4300008: chare.002
-    4300010: tabel
-    4300012: door_room_1
-    4300014: book case.006
-    4300016: book case.005
-    4300018: windowglass.001
-    4300020: pillers
-    4300022: medieavel-window.001
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: book case.005
+  - first:
+      1: 100002
+    second: book case.006
+  - first:
+      1: 100004
+    second: chare.002
+  - first:
+      1: 100006
+    second: Cylinder.017
+  - first:
+      1: 100008
+    second: door_room_1
+  - first:
+      1: 100010
+    second: //RootNode
+  - first:
+      1: 100012
+    second: g
+  - first:
+      1: 100014
+    second: medieavel-window.001
+  - first:
+      1: 100016
+    second: pillers
+  - first:
+      1: 100018
+    second: room
+  - first:
+      1: 100020
+    second: Sphere.000
+  - first:
+      1: 100022
+    second: tabel
+  - first:
+      1: 100024
+    second: windowglass.001
+  - first:
+      4: 400000
+    second: book case.005
+  - first:
+      4: 400002
+    second: book case.006
+  - first:
+      4: 400004
+    second: chare.002
+  - first:
+      4: 400006
+    second: Cylinder.017
+  - first:
+      4: 400008
+    second: door_room_1
+  - first:
+      4: 400010
+    second: //RootNode
+  - first:
+      4: 400012
+    second: g
+  - first:
+      4: 400014
+    second: medieavel-window.001
+  - first:
+      4: 400016
+    second: pillers
+  - first:
+      4: 400018
+    second: room
+  - first:
+      4: 400020
+    second: Sphere.000
+  - first:
+      4: 400022
+    second: tabel
+  - first:
+      4: 400024
+    second: windowglass.001
+  - first:
+      21: 2100000
+    second: No Name
+  - first:
+      21: 2100002
+    second: A01
+  - first:
+      21: 2100004
+    second: Material.045
+  - first:
+      21: 2100006
+    second: wall_stone_brick.002
+  - first:
+      21: 2100008
+    second: ground tiles.002
+  - first:
+      21: 2100010
+    second: wood the tabel and chaer.009
+  - first:
+      21: 2100012
+    second: wood the tabel and chaer.008
+  - first:
+      21: 2100014
+    second: door.002
+  - first:
+      21: 2100016
+    second: booksonthecase.013
+  - first:
+      21: 2100018
+    second: bookcasewood.007
+  - first:
+      21: 2100020
+    second: glass.001
+  - first:
+      21: 2100022
+    second: pilers
+  - first:
+      21: 2100024
+    second: border.001
+  - first:
+      23: 2300000
+    second: book case.005
+  - first:
+      23: 2300002
+    second: book case.006
+  - first:
+      23: 2300004
+    second: chare.002
+  - first:
+      23: 2300006
+    second: Cylinder.017
+  - first:
+      23: 2300008
+    second: door_room_1
+  - first:
+      23: 2300010
+    second: g
+  - first:
+      23: 2300012
+    second: medieavel-window.001
+  - first:
+      23: 2300014
+    second: pillers
+  - first:
+      23: 2300016
+    second: room
+  - first:
+      23: 2300018
+    second: Sphere.000
+  - first:
+      23: 2300020
+    second: tabel
+  - first:
+      23: 2300022
+    second: windowglass.001
+  - first:
+      23: 2300024
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: book case.005
+  - first:
+      33: 3300002
+    second: book case.006
+  - first:
+      33: 3300004
+    second: chare.002
+  - first:
+      33: 3300006
+    second: Cylinder.017
+  - first:
+      33: 3300008
+    second: door_room_1
+  - first:
+      33: 3300010
+    second: g
+  - first:
+      33: 3300012
+    second: medieavel-window.001
+  - first:
+      33: 3300014
+    second: pillers
+  - first:
+      33: 3300016
+    second: room
+  - first:
+      33: 3300018
+    second: Sphere.000
+  - first:
+      33: 3300020
+    second: tabel
+  - first:
+      33: 3300022
+    second: windowglass.001
+  - first:
+      33: 3300024
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: Sphere.000
+  - first:
+      43: 4300002
+    second: Cylinder.017
+  - first:
+      43: 4300004
+    second: room
+  - first:
+      43: 4300006
+    second: g
+  - first:
+      43: 4300008
+    second: chare.002
+  - first:
+      43: 4300010
+    second: tabel
+  - first:
+      43: 4300012
+    second: door_room_1
+  - first:
+      43: 4300014
+    second: book case.006
+  - first:
+      43: 4300016
+    second: book case.005
+  - first:
+      43: 4300018
+    second: windowglass.001
+  - first:
+      43: 4300020
+    second: pillers
+  - first:
+      43: 4300022
+    second: medieavel-window.001
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -114,17 +268,23 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -136,10 +296,13 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -149,14 +312,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
