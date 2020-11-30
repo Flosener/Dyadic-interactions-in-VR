@@ -12,8 +12,8 @@ public class CandleAnimRandomizer : MonoBehaviour
 
     private void Start()
     {
-        state = Random.Range(0,2);
-        stateNames = new List<string>() {"flying_candle_1", "flying_candle_2"};
+        state = Random.Range(0,3);
+        stateNames = new List<string>() {"flying_candle_1", "flying_candle_2", "flying_candle_3"};
         anim = GetComponent<Animator>();
     }
 

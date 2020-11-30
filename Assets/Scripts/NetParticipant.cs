@@ -6,9 +6,10 @@ using Valve.VR;
 
 public class NetParticipant : NetworkBehaviour
 {
-    //source gameobjects head, left and right controller object of local player
+    // source gameobjects head, left and right controller object of local player
     private GameObject theLocalPlayer;
     private GameObject headlessPlayer;
+    
     [SerializeField] private GameObject localHead;
     [SerializeField] private GameObject localLeftHand;
     [SerializeField] private GameObject localRightHand;
@@ -32,10 +33,10 @@ public class NetParticipant : NetworkBehaviour
  
         if (isLocalPlayer)
         {
-            //disabled conroller meshes at VR player side so it cannont be viewed by local player
-            //netHeadObj.GetComponent<MeshRenderer>().enabled = false; //commented out for testing
-            netLeftCtrl.GetComponent<MeshRenderer>().enabled = false;
-            netRightCtrl.GetComponent<MeshRenderer>().enabled = false;
+            // disabled controller meshes at VR player side so it cannot be viewed by local player
+            // netHeadObj.GetComponent<MeshRenderer>().enabled = false; // commented out for testing
+            // netLeftCtrl.GetComponent<MeshRenderer>().enabled = false;
+            // netRightCtrl.GetComponent<MeshRenderer>().enabled = false;
         }
     }
  
@@ -57,18 +58,15 @@ public class NetParticipant : NetworkBehaviour
     {
         // this is ONLY called on local player
  
-        //Debug.Log(gameObject.name + "Entered local start player, locating rig objects");
-        //isLinkedToVR = true;
- 
         // find the gaming rig in the scene and link to it
         if (theLocalPlayer == null)
         {
-            theLocalPlayer = GameObject.Find("SteamVRObjects");// find the rig in the scene
+            theLocalPlayer = GameObject.Find("SteamVRObjects"); // find the rig in the scene
+            Debug.Log("Found local player");
         }
  
-        // now link localHMD, localHands to the Rig so that they are
-        // automatically filled when the rig moves
-        //localHead = Camera.main.gameObject; // get HMD with Camera.main wasnt working for me so a lazy load of the game object name was used.
+        // now link localHMD, localHands to the Rig so that they are automatically filled when the rig moves
+        // localHead = Camera.main.gameObject; // get HMD with Camera.main wasn't working for me so a lazy load of the game object name was used.
         localHead = theLocalPlayer.transform.Find("VRCamera").gameObject;
         localLeftHand = theLocalPlayer.transform.Find("LeftHand").gameObject;
         localRightHand = theLocalPlayer.transform.Find("RightHand").gameObject;
