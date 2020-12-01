@@ -15,7 +15,7 @@ public class NetworkManagerDobby : NetworkManager
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
         // add participant at correct spawn position
-        Transform start = numPlayers == 0 ? leftParticipantSpawn : rightParticipantSpawn;
+        Transform start = numPlayers % 2 != 0 ? leftParticipantSpawn : rightParticipantSpawn;
         GameObject participant = Instantiate(playerPrefab, start.position, start.rotation);
         NetworkServer.AddPlayerForConnection(conn, participant);
         Debug.Log("Player spawned");
