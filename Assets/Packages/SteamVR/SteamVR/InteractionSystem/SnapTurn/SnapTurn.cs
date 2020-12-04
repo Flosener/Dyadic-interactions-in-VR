@@ -63,7 +63,6 @@ namespace Valve.VR.InteractionSystem
                     return;
 
                 // only allow snap turning when not holding something
-
                 bool rightHandValid = player.rightHand.currentAttachedObject == null ||
                     (player.rightHand.currentAttachedObject != null
                     && player.rightHand.currentAttachedTeleportManager != null

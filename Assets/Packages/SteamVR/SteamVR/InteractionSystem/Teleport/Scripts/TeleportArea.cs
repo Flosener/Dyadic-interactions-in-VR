@@ -31,7 +31,9 @@ namespace Valve.VR.InteractionSystem
 			areaMesh = GetComponent<MeshRenderer>();
 
 #if UNITY_URP
-			tintColorId = Shader.PropertyToID( "_BaseColor" );
+			// tintColorId = Shader.PropertyToID( "_BaseColor" );
+			// using Valve/VR/Highlight Shader instead of URP shader
+			tintColorId = Shader.PropertyToID("_TintColor");
 #else
 			tintColorId = Shader.PropertyToID("_TintColor");
 #endif

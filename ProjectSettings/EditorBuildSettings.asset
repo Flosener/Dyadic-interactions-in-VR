@@ -6,9 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/EntranceHall.unity
+    path: Assets/Scenes/EntranceHall_Individual.unity
+    guid: a7461acf04a28aa4095447313c17aade
+  - enabled: 1
+    path: Assets/Scenes/EntranceHall_Joint.unity
     guid: 9fa52236eb5264380b4d5322b95bac68
   - enabled: 1
-    path: Assets/Scenes/ExperimentRoom.unity
-    guid: 733d5ef126dfe0b42a4e8f2ff92ffb82
+    path: Assets/Scenes/ExperimentRoom_Individual2Choice.unity
+    guid: 4f399214b1e908c4c8743878e7879b37
+  - enabled: 1
+    path: Assets/Scenes/ExperimentRoom_IndividualGoNogo.unity
+    guid: d86f0d8735ed57e48be3ee2cc69b6362
+  - enabled: 1
+    path: Assets/Scenes/ExperimentRoom_JointGoNogo.unity
+    guid: cb5a672497d9f164191845869f8df682
   m_configObjects: {}
