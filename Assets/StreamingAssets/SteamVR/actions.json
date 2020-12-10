@@ -54,11 +54,15 @@
       "type": "vector2"
     },
     {
-      "name": "/actions/default/in/leftResponse",
+      "name": "/actions/default/in/rightHandleftResponse",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/rightResponse",
+      "name": "/actions/default/in/rightHandrightResponse",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/leftHandleftResponse",
       "type": "boolean"
     },
     {
@@ -183,8 +187,9 @@
       "/actions/default/in/SnapTurnLeft": "Snap Turn (Left)",
       "/actions/default/in/SnapTurnRight": "Snap Turn (Right)",
       "/actions/default/in/JoystickMove": "JoystickMove",
-      "/actions/default/in/leftResponse": "leftResponse",
-      "/actions/default/in/rightResponse": "rightResponse"
+      "/actions/default/in/rightHandleftResponse": "rightHandleftResponse",
+      "/actions/default/in/rightHandrightResponse": "rightHandrightResponse",
+      "/actions/default/in/leftHandleftResponse": "leftHandleftResponse"
     }
   ]
 }

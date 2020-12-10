@@ -4,34 +4,28 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public static AudioClip backgrondSound, doorOpen, doorClose;
-    private static AudioSource audioSrc;
+    private static AudioClip _backgroundSound, _doorOpen;
+    private static AudioSource _audioSrc;
     
-    void Start()
-    {
-        backgrondSound = Resources.Load<AudioClip>("HarpMusicSound");
-        doorOpen = Resources.Load<AudioClip>("DoorOpensWithDoorknobSound");
-        doorClose = Resources.Load<AudioClip>("DoorCloseSound");
-
-        audioSrc = GetComponent<AudioSource>();
+    private void Start()
+    {    
+        // Get audio source from the SoundManager and necessary sounds.
+        _audioSrc = GetComponent<AudioSource>();
+        _backgroundSound = Resources.Load<AudioClip>("HarpMusicSound");
+        _doorOpen = Resources.Load<AudioClip>("DoorOpensWithDoorknobSound");
     }
 
+    // Use with SoundManager.PlaySound("CLIP NAME");
     public static void PlaySound(string clip)
     {
         switch (clip)
         {
             case "backgroundSound":
-                audioSrc.PlayOneShot(backgrondSound);
+                _audioSrc.PlayOneShot(_backgroundSound);
                 break;
             case "doorOpen":
-                audioSrc.PlayOneShot(doorOpen);
-                break;
-            case "doorClose":
-                audioSrc.PlayOneShot(doorClose);
+                _audioSrc.PlayOneShot(_doorOpen);
                 break;
         }
     }
 }
-
-
-// use with SoundManager.PlaySound("blabla");

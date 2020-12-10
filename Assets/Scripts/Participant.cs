@@ -6,24 +6,46 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using Random = UnityEngine.Random;
 
-public class LocalParticipant : MonoBehaviour
+public class Participant : MonoBehaviour
 {
+    // Participant's movement variables.
     public SteamVR_Action_Vector2 input;
     public float speed = 1f;
     private UnityEngine.CharacterController _charController;
+    
+    // Helper variable for coordinating spawns and input with the experiment manager.
+    public static bool leftSpawned;
 
     private void Start()
     {
         // Get CharacterController for movement.
         _charController = GetComponent<UnityEngine.CharacterController>();
-        // Set position back in the hall/room.
-        transform.position = new Vector3(0,0,-5);
+        
+        // Different spawns for different experiments/scenes.
+        if (UIOptions.experimentID == "Individual_GoNoGo")
+        {
+            // Randomize left or right spawn of participant.
+            if (Random.Range(0, 2) == 0)
+            {
+                transform.position = new Vector3(-2, 0, -5);
+                leftSpawned = true;
+            } else transform.position = new Vector3(2, 0, -5);
+        }
+        else
+        {
+            transform.position = new Vector3(0,0,-5);
+        }
     }
 
     private void Update()
     {
-        Move();
+        // Do not allow movement in experiment rooms.
+        if (SceneManager.GetActiveScene().name == "EntranceHall")
+        {
+            Move();
+        }
     }
 
     private void Move()

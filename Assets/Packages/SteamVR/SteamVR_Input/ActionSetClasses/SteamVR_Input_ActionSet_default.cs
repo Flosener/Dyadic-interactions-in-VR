@@ -113,19 +113,27 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean leftResponse
+        public virtual SteamVR_Action_Boolean rightHandleftResponse
         {
             get
             {
-                return SteamVR_Actions.default_leftResponse;
+                return SteamVR_Actions.default_rightHandleftResponse;
             }
         }
         
-        public virtual SteamVR_Action_Boolean rightResponse
+        public virtual SteamVR_Action_Boolean rightHandrightResponse
         {
             get
             {
-                return SteamVR_Actions.default_rightResponse;
+                return SteamVR_Actions.default_rightHandrightResponse;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean leftHandleftResponse
+        {
+            get
+            {
+                return SteamVR_Actions.default_leftHandleftResponse;
             }
         }
         

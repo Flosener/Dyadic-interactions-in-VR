@@ -41,9 +41,11 @@ namespace Valve.VR
         
         private static SteamVR_Action_Vector2 p_default_JoystickMove;
         
-        private static SteamVR_Action_Boolean p_default_leftResponse;
+        private static SteamVR_Action_Boolean p_default_rightHandleftResponse;
         
-        private static SteamVR_Action_Boolean p_default_rightResponse;
+        private static SteamVR_Action_Boolean p_default_rightHandrightResponse;
+        
+        private static SteamVR_Action_Boolean p_default_leftHandleftResponse;
         
         private static SteamVR_Action_Vibration p_default_Haptic;
         
@@ -157,19 +159,27 @@ namespace Valve.VR
             }
         }
         
-        public static SteamVR_Action_Boolean default_leftResponse
+        public static SteamVR_Action_Boolean default_rightHandleftResponse
         {
             get
             {
-                return SteamVR_Actions.p_default_leftResponse.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_rightHandleftResponse.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
-        public static SteamVR_Action_Boolean default_rightResponse
+        public static SteamVR_Action_Boolean default_rightHandrightResponse
         {
             get
             {
-                return SteamVR_Actions.p_default_rightResponse.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_rightHandrightResponse.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean default_leftHandleftResponse
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_leftHandleftResponse.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -252,8 +262,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_JoystickMove,
-                    SteamVR_Actions.default_leftResponse,
-                    SteamVR_Actions.default_rightResponse,
+                    SteamVR_Actions.default_rightHandleftResponse,
+                    SteamVR_Actions.default_rightHandrightResponse,
+                    SteamVR_Actions.default_leftHandleftResponse,
                     SteamVR_Actions.default_Haptic,
                     SteamVR_Actions.platformer_Move,
                     SteamVR_Actions.platformer_Jump,
@@ -275,8 +286,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_JoystickMove,
-                    SteamVR_Actions.default_leftResponse,
-                    SteamVR_Actions.default_rightResponse,
+                    SteamVR_Actions.default_rightHandleftResponse,
+                    SteamVR_Actions.default_rightHandrightResponse,
+                    SteamVR_Actions.default_leftHandleftResponse,
                     SteamVR_Actions.platformer_Move,
                     SteamVR_Actions.platformer_Jump,
                     SteamVR_Actions.buggy_Steering,
@@ -299,8 +311,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_HeadsetOnHead,
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
-                    SteamVR_Actions.default_leftResponse,
-                    SteamVR_Actions.default_rightResponse,
+                    SteamVR_Actions.default_rightHandleftResponse,
+                    SteamVR_Actions.default_rightHandrightResponse,
+                    SteamVR_Actions.default_leftHandleftResponse,
                     SteamVR_Actions.platformer_Jump,
                     SteamVR_Actions.buggy_Brake,
                     SteamVR_Actions.buggy_Reset};
@@ -325,8 +338,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_JoystickMove,
-                    SteamVR_Actions.default_leftResponse,
-                    SteamVR_Actions.default_rightResponse,
+                    SteamVR_Actions.default_rightHandleftResponse,
+                    SteamVR_Actions.default_rightHandrightResponse,
+                    SteamVR_Actions.default_leftHandleftResponse,
                     SteamVR_Actions.platformer_Move,
                     SteamVR_Actions.platformer_Jump,
                     SteamVR_Actions.buggy_Steering,
@@ -349,8 +363,9 @@ namespace Valve.VR
             SteamVR_Actions.p_default_SnapTurnLeft = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnLeft")));
             SteamVR_Actions.p_default_SnapTurnRight = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnRight")));
             SteamVR_Actions.p_default_JoystickMove = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/default/in/JoystickMove")));
-            SteamVR_Actions.p_default_leftResponse = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/leftResponse")));
-            SteamVR_Actions.p_default_rightResponse = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/rightResponse")));
+            SteamVR_Actions.p_default_rightHandleftResponse = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/rightHandleftResponse")));
+            SteamVR_Actions.p_default_rightHandrightResponse = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/rightHandrightResponse")));
+            SteamVR_Actions.p_default_leftHandleftResponse = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/leftHandleftResponse")));
             SteamVR_Actions.p_default_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/default/out/Haptic")));
             SteamVR_Actions.p_platformer_Move = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/platformer/in/Move")));
             SteamVR_Actions.p_platformer_Jump = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/platformer/in/Jump")));
