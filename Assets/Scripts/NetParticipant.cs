@@ -1,25 +1,61 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Mirror;
+﻿using Mirror;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Valve.VR;
-using Valve.VR.InteractionSystem;
-using Random = UnityEngine.Random;
 
 public class NetParticipant : NetworkBehaviour
 {
-    // Helper variable for coordinating spawns and input with the experiment manager.
+    // Helper variable for coordinating spawns and input.
     public static int connectionID;
+    public SteamVR_Action_Boolean rightHandRightResponse;
+    public SteamVR_Action_Boolean rightHandLeftResponse;
 
     private void Start()
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
         // Get the connection ID of this participant.
         connectionID = NetworkClient.connection.connectionId;
         Debug.Log("connectionID: " + connectionID);
+        
+        // Set position.
+        transform.position = connectionID == NetworkManagerDobby.leftConnection
+            ? new Vector3(-2, 0, -5)
+            : new Vector3(2, 0, -5);
     }
-    
-    // Remark: As the NetParticipant only exists in the Joint experiment room,
-    // we do not have to implement any further movement and spawnpositions are handled by the NetworkManager.
+
+    private void Update()
+    {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        
+        // "B" button on right Oculus controller.
+        if ((rightHandLeftResponse.state && connectionID == NetworkManagerDobby.leftConnection && (ExperimentManager.trialID == 0 || ExperimentManager.trialID == 1)))
+        {
+            CmdLeftResponse();
+        }
+        // "A" button on right Oculus controller.
+        else if ((rightHandRightResponse.state && connectionID == NetworkManagerDobby.rightConnection && (ExperimentManager.trialID == 2 || ExperimentManager.trialID == 3)))
+        {
+            CmdRightResponse();
+        }
+        
+    }
+
+    [Command]
+    private void CmdLeftResponse()
+    {
+        ExperimentManager.leftResponseGiven = true;
+        ExperimentManager.leftReady = true;
+    }
+
+    [Command]
+    private void CmdRightResponse()
+    {
+        ExperimentManager.rightResponseGiven = true;
+        ExperimentManager.rightReady = true;
+    }
 }

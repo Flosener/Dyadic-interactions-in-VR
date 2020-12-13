@@ -1481,9 +1481,9 @@ GameObject:
   - component: {fileID: 2657951462871260884}
   - component: {fileID: 2657951462860259288}
   - component: {fileID: 2657951462992273429}
-  - component: {fileID: 4240733965939961199}
-  - component: {fileID: 1764044160509491653}
   - component: {fileID: 1994124464650442068}
+  - component: {fileID: 1764044160509491653}
+  - component: {fileID: 4240733965939961199}
   m_Layer: 8
   m_Name: NetPlayer
   m_TagString: Untagged
@@ -1558,6 +1558,42 @@ CharacterController:
   m_SkinWidth: 0.05
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &1994124464650442068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657951462871314092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1254a0eb04fed8643bdeccd94ddc0673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  rightHandRightResponse:
+    actionPath: /actions/default/in/rightHandrightResponse
+    needsReinit: 0
+  rightHandLeftResponse:
+    actionPath: /actions/default/in/leftHandleftResponse
+    needsReinit: 0
+--- !u!114 &1764044160509491653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657951462871314092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!114 &4240733965939961199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1576,40 +1612,6 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
---- !u!114 &1764044160509491653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2657951462871314092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &1994124464650442068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2657951462871314092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1254a0eb04fed8643bdeccd94ddc0673, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  input:
-    actionPath: /actions/default/in/JoystickMove
-    needsReinit: 0
-  speed: 2
 --- !u!1 &2657951462871315722
 GameObject:
   m_ObjectHideFlags: 0

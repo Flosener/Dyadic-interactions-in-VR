@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 using Random = UnityEngine.Random;
 using Mirror;
 
-public class ExperimentManager : MonoBehaviour
+public class NetExperimentManager : NetworkBehaviour
 {
        // Scene object/animation variables.
        public GameObject sortingHat;

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Mirror;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using Valve.VR.InteractionSystem;
 
 /*
     This class is used for the UI in the EntranceHall to join the different experiments.
@@ -14,8 +8,6 @@ using Valve.VR.InteractionSystem;
 public class UIOptions : MonoBehaviour
 {
     // Declare variables.
-    private GameObject _networkManager;
-    private NetworkManager _manager;
     public static string experimentID;
     public static bool isHost;
 

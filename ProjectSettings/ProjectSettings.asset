@@ -671,10 +671,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 6aa9b2a7-7887-41b6-9283-0c369418fd83
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Harry Potter
+  organizationId: flosener
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
