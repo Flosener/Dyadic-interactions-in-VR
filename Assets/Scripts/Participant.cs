@@ -23,6 +23,8 @@ public class Participant : MonoBehaviour
         // Get CharacterController for movement.
         _charController = GetComponent<UnityEngine.CharacterController>();
 
+        UIOptions.experimentID = "Joint_GoNoGo";
+
         // Different spawns for different experiments/scenes.
         switch (UIOptions.experimentID)
         {
@@ -37,8 +39,11 @@ public class Participant : MonoBehaviour
             case "Individual_TwoChoice":
                 transform.position = new Vector3(0,0,-5);
                 break;
-            default:
+            case "EntranceHall":
                 transform.position = new Vector3(0,0,-12);
+                break;
+            case "Joint_GoNoGo":
+                transform.position = UIOptions.isHost ? new Vector3(-1.5f, 0, -5) : new Vector3(1.5f, 0, -5);
                 break;
         }
     }
@@ -49,6 +54,7 @@ public class Participant : MonoBehaviour
         if ((leftHandLeftResponse.state && UIOptions.experimentID == "Individual_TwoChoice") || 
             (leftHandLeftResponse.state && UIOptions.experimentID == "Individual_GoNoGo" && leftSpawned))
         {
+            Debug.LogWarning("left response");
             ExperimentManager.leftResponseGiven = true;
             ExperimentManager.leftReady = true;
         }
@@ -56,6 +62,7 @@ public class Participant : MonoBehaviour
         else if ((rightHandRightResponse.state && UIOptions.experimentID == "Individual_TwoChoice") || 
                  (rightHandRightResponse.state && UIOptions.experimentID == "Individual_GoNoGo" && !leftSpawned))
         {
+            Debug.LogWarning("right response");
             ExperimentManager.rightResponseGiven = true;
             ExperimentManager.rightReady = true;
         }

@@ -42,11 +42,12 @@ public class NetExperimentManager : NetworkBehaviour
        private bool _beginExperiment;
        private bool _experimentDone;
        private bool _skipTrial;
-       public static int trialID;
+       public static int trialID = -1;
        public static bool leftResponseGiven;
-       public static bool rightResponseGiven;
+       public static bool rightResponseGiven; 
        public static bool leftReady;
        public static bool rightReady;
+       public static bool spawningDone;
 
        /*
         General lifecycle:
@@ -71,7 +72,7 @@ public class NetExperimentManager : NetworkBehaviour
               _manager = manager.GetComponent<NetworkManagerDobby>();
 
               // Save name of experimental condition.
-              _experimentID = UIOptions.experimentID;
+              // _experimentID = UIOptions.experimentID;
 
               // When joining the networked experiment, spawn both participants.
               if (_experimentID == "Joint_GoNoGo")
@@ -88,11 +89,16 @@ public class NetExperimentManager : NetworkBehaviour
                      }
               }
 
+              UIOptions.isHost = false;
+              _experimentID = "Joint_GoNoGo";
+              Debug.LogWarning("after spawning");
+              
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               _beginExperiment = false;
               StartCoroutine(HandleInstructions());
               yield return new WaitUntil(() => _beginExperiment);
-
+              Debug.LogWarning("after instructions");
+              
               // Start experiment.
               StartCoroutine(Experiment(3f, 2, 5));
               yield return new WaitUntil(() => _experimentDone);
@@ -272,74 +278,30 @@ public class NetExperimentManager : NetworkBehaviour
        // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
        private IEnumerator HandleInstructions()
        {
-              // UI has to be spawned by NetworkManagerDobby in the networked experiment, for individual experiments the UI is already in the scene.
-              if (_experimentID != "Joint_GoNoGo")
-              { 
-                     _ui = GameObject.Find("InstructionsUI");
-              }
+              yield return new WaitUntil(() => spawningDone);
               
-              // Set participants' readiness to false at the beginning.
-              leftReady = false;
-              rightReady = false;
-              
-              // Show instructions depending on the room and spawn position.
-              switch (_experimentID)
-              {
-                     case "Individual_TwoChoice":
-                            GameObject instructionsUI = _ui.transform.Find("IndividualTwoChoice").gameObject;
-                            instructionsUI.SetActive(true);
-                            yield return new WaitUntil(() => leftReady || rightReady);
-                            instructionsUI.SetActive(false);
-                            break;
-                     
-                     case "Individual_GoNoGo":
-                            GameObject instructionsUILeft = _ui.transform.Find("IndividualGoNoGoLeft").gameObject;
-                            GameObject instructionsUIRight = _ui.transform.Find("IndividualGoNoGoRight").gameObject;
-                            
-                            if (Participant.leftSpawned)
-                            {
-                                   instructionsUILeft.SetActive(true);
-                                   yield return new WaitUntil(() => leftReady);
-                                   instructionsUILeft.SetActive(false);
-                            }
-                            else
-                            {
-                                   instructionsUIRight.SetActive(true);
-                                   yield return new WaitUntil(() => rightReady);
-                                   instructionsUIRight.SetActive(false);
-                            }
-                            break;
-                     
-                     case "Joint_GoNoGo":
-                            // Wait until both participants connected to the network and UI got spawned.
-                            // after Lab check: (NetworkManagerDobby.leftConnection != -1 && NetworkManagerDobby.rightConnection != -1 && spawningDone)
-                            yield return new WaitUntil(() => NetworkManagerDobby.spawningDone);
-                            
-                            GameObject ui = GameObject.FindGameObjectWithTag("InstructionsUI");
-                            GameObject instructionsUILeftJoint = ui.transform.Find("JointGoNoGoLeft").gameObject;
-                            GameObject instructionsUIRightJoint = ui.transform.Find("JointGoNoGoRight").gameObject;
-                            
-                            // After spawning, the UI is active, so set them false first and decide by if-else.
-                            instructionsUILeftJoint.SetActive(false);
-                            instructionsUIRightJoint.SetActive(false);
+              Debug.LogWarning("in instructions after spawning done");
 
-                            if (NetParticipant.connectionID == NetworkManagerDobby.leftConnection)
-                            {
-                                   instructionsUILeftJoint.SetActive(true);
-                                   // after Lab check: _leftReady && _rightReady
-                                   yield return new WaitUntil(() => leftReady);
-                                   instructionsUILeftJoint.SetActive(false);
-                            }
-                            else if (NetParticipant.connectionID == NetworkManagerDobby.rightConnection)
-                            {
-                                   instructionsUIRightJoint.SetActive(true);
-                                   yield return new WaitUntil(() => leftReady && rightReady);
-                                   instructionsUIRightJoint.SetActive(false);
-                            }
-                            break;
+              GameObject leftUI = GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoLeft").gameObject;
+              GameObject rightUI = GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoRight").gameObject;
+
+              Debug.LogWarning("found UI gameobject");
+
+              if (UIOptions.isHost)
+              {
+                     Debug.LogWarning("in left instructions");
+                     yield return new WaitUntil(() => leftReady);
+                     leftUI.SetActive(false);
               }
-              
+              else
+              {
+                     Debug.LogWarning("in right instructions");
+                     yield return new WaitUntil(() => rightReady);
+                     rightUI.SetActive(false);
+              }
+
               // After the instructions are handled, the experiment can begin.
+              yield return new WaitUntil(() => leftReady && rightReady);
               _beginExperiment = true;
        }
 }

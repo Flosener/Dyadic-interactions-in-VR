@@ -14,9 +14,7 @@ public class ExperimentManager : MonoBehaviour
        public GameObject rightDoor;
        public GameObject leftLight;
        public GameObject rightLight;
-       public GameObject manager;
        
-       private NetworkManager _manager;
        private Material _hatColor;
        private Animator _leftDoorAnim;
        private Animator _rightDoorAnim;
@@ -65,13 +63,13 @@ public class ExperimentManager : MonoBehaviour
               _rightDoorAnim = rightDoor.GetComponent<Animator>();
               _leftLightAnim = leftLight.GetComponent<Animator>();
               _rightLightAnim = rightLight.GetComponent<Animator>();
-              _manager = manager.GetComponent<NetworkManagerDobby>();
 
               // Save name of experimental condition.
               _experimentID = UIOptions.experimentID;
+              Debug.LogWarning(_experimentID);
 
               // When joining the networked experiment, spawn both participants.
-              if (_experimentID == "Joint_GoNoGo")
+              /*if (_experimentID == "Joint_GoNoGo")
               {
                      if (UIOptions.isHost)
                      {
@@ -83,7 +81,7 @@ public class ExperimentManager : MonoBehaviour
                             _manager.StartClient();
                             Debug.Log("Started as client.");
                      }
-              }
+              }*/
 
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               _beginExperiment = false;
@@ -98,10 +96,10 @@ public class ExperimentManager : MonoBehaviour
               _experimentDone = false;
 
               // After finishing the experiment, (stop server and) return to the EntranceHall.
-              if (_experimentID == "Joint_GoNoGo" && _manager.isNetworkActive)
+              /*if (_experimentID == "Joint_GoNoGo" && _manager.isNetworkActive)
               {
                      _manager.StopServer();
-              }
+              }*/
 
               UIOptions.experimentID = "EntranceHall";
               SceneManager.LoadScene("EntranceHall");
@@ -283,6 +281,7 @@ public class ExperimentManager : MonoBehaviour
               switch (_experimentID)
               {
                      case "Individual_TwoChoice":
+                            Debug.LogWarning("in instructions");
                             GameObject instructionsUI = _ui.transform.Find("IndividualTwoChoice").gameObject;
                             instructionsUI.SetActive(true);
                             yield return new WaitUntil(() => leftReady || rightReady);
@@ -304,34 +303,6 @@ public class ExperimentManager : MonoBehaviour
                                    instructionsUIRight.SetActive(true);
                                    yield return new WaitUntil(() => rightReady);
                                    instructionsUIRight.SetActive(false);
-                            }
-                            break;
-                     
-                     case "Joint_GoNoGo":
-                            // Wait until both participants connected to the network and UI got spawned.
-                            // after Lab check: (NetworkManagerDobby.leftConnection != -1 && NetworkManagerDobby.rightConnection != -1 && spawningDone)
-                            yield return new WaitUntil(() => NetworkManagerDobby.spawningDone);
-                            
-                            GameObject ui = GameObject.FindGameObjectWithTag("InstructionsUI");
-                            GameObject instructionsUILeftJoint = ui.transform.Find("JointGoNoGoLeft").gameObject;
-                            GameObject instructionsUIRightJoint = ui.transform.Find("JointGoNoGoRight").gameObject;
-                            
-                            // After spawning, the UI is active, so set them false first and decide by if-else.
-                            instructionsUILeftJoint.SetActive(false);
-                            instructionsUIRightJoint.SetActive(false);
-
-                            if (NetParticipant.connectionID == NetworkManagerDobby.leftConnection)
-                            {
-                                   instructionsUILeftJoint.SetActive(true);
-                                   // after Lab check: _leftReady && _rightReady
-                                   yield return new WaitUntil(() => leftReady);
-                                   instructionsUILeftJoint.SetActive(false);
-                            }
-                            else if (NetParticipant.connectionID == NetworkManagerDobby.rightConnection)
-                            {
-                                   instructionsUIRightJoint.SetActive(true);
-                                   yield return new WaitUntil(() => leftReady && rightReady);
-                                   instructionsUIRightJoint.SetActive(false);
                             }
                             break;
               }
