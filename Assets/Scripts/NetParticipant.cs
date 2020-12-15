@@ -8,7 +8,8 @@ public class NetParticipant : NetworkBehaviour
     // Helper variable for coordinating spawns and input.
     public SteamVR_Action_Boolean rightHandRightResponse;
     public SteamVR_Action_Boolean rightHandLeftResponse;
-    
+    private NetExperimentManager expManager;
+
     //source gameobjects head, left and right controller object of local player
     private GameObject theLocalPlayer;
     private GameObject headlessPlayer;
@@ -72,6 +73,8 @@ public class NetParticipant : NetworkBehaviour
             netLeftCtrl.transform.Find("vr_glove_left_model_slim").transform.Find("slim_l").transform.Find("vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().enabled = false;
             netRightCtrl.transform.Find("vr_wand").transform.Find("slim_r").transform.Find("vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().enabled = false;
             netRightCtrl.transform.Find("vr_wand").transform.Find("Wand4").gameObject.SetActive(false);
+
+            expManager = GameObject.Find("NetExperimentManager").GetComponent<NetExperimentManager>();
         }
     }
  
@@ -83,16 +86,14 @@ public class NetParticipant : NetworkBehaviour
         }
         
         // "B" button on right Oculus controller.
-        if ((Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1)))
-        {   
-            //NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoLeft").gameObject);
+        if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 0 || NetExperimentManager.trialID == 1))
+        {
             CmdLeftResponse();
             Debug.LogWarning("Left response given");
         }
         // "A" button on right Oculus controller.
-        else if ((Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1)))
+        else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 2 || NetExperimentManager.trialID == 3))
         {
-            //NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoRight").gameObject);
             CmdRightResponse();
             Debug.LogWarning("Right response given");
         } 
@@ -132,20 +133,18 @@ public class NetParticipant : NetworkBehaviour
     }
 
     [Command]
-    private void CmdLeftResponse()
+    public void CmdLeftResponse()
     {
         NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUILeft"));
-        // GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoLeft").gameObject.SetActive(false);
-        //NetExperimentManager.leftResponseGiven = true;
-        //NetExperimentManager.leftReady = true;
+        expManager.leftResponseGiven = true;
+        expManager.leftReady = true;
     }
 
     [Command]
-    private void CmdRightResponse()
+    public void CmdRightResponse()
     {
         NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUIRight"));
-        //GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoRight").gameObject.SetActive(false);
-        //NetExperimentManager.rightResponseGiven = true;
-        //NetExperimentManager.rightReady = true;
+        expManager.rightResponseGiven = true;
+        expManager.rightReady = true;
     }
 }

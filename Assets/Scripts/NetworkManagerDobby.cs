@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class NetworkManagerDobby : NetworkManager
 {
+    private GameObject _experimentManager;
     private GameObject _instructionsLeft;
     private GameObject _instructionsRight;
     private NetworkConnection _leftConnection;
@@ -18,7 +19,7 @@ public class NetworkManagerDobby : NetworkManager
         GameObject participant = Instantiate(playerPrefab, position, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, participant);
         
-        // Save network connections of both participants for participant-specific input authority and tell ExperimentManager that spawning is done.
+        // Save network connections of both participants for UI auth, spawn UI and tell ExperimentManager that spawning is done.
         switch (numPlayers)
         {
             case 1:
@@ -26,17 +27,12 @@ public class NetworkManagerDobby : NetworkManager
                 break;
             case 2:
                 _rightConnection = conn;
-                // _instructions = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUI"));
-                // NetworkServer.Spawn(_instructions);
+                _experimentManager = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "NetExperimentManager"));
+                NetworkServer.Spawn(_experimentManager);
                 _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
                 NetworkServer.Spawn(_instructionsLeft, _leftConnection);
                 _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
                 NetworkServer.Spawn(_instructionsRight, _rightConnection);
-                //NetworkServer.SpawnObjects();
-                Debug.LogWarning("spawn done");
-                // _instructions.transform.Find("JointGoNoGoLeft").GetComponent<NetworkIdentity>().AssignClientAuthority(_leftConnection);
-                // Debug.LogWarning(_instructions.transform.Find("JointGoNoGoLeft").GetComponent<NetworkIdentity>());
-                // _instructions.transform.Find("JointGoNoGoRight").GetComponent<NetworkIdentity>().AssignClientAuthority(_rightConnection);
                 NetExperimentManager.spawningDone = true;
                 break;
         }

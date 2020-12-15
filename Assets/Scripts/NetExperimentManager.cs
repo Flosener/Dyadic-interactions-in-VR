@@ -13,20 +13,13 @@ using Mirror;
 public class NetExperimentManager : NetworkBehaviour
 {
        // Scene object/animation variables.
-       public GameObject sortingHat;
-       public GameObject leftDoor;
-       public GameObject rightDoor;
-       public GameObject leftLight;
-       public GameObject rightLight;
-       public GameObject manager;
-       
        private NetworkManager _manager;
        private Material _hatColor;
        private Animator _leftDoorAnim;
        private Animator _rightDoorAnim;
        private Animator _leftLightAnim;
        private Animator _rightLightAnim;
-       private GameObject _ui;
+       // private GameObject _ui;
 
        // Data variables.
        private string _experimentID;
@@ -40,14 +33,14 @@ public class NetExperimentManager : NetworkBehaviour
 
        // Experiment tool/helper variables.
        private float _trialStartTime;
-       private bool _beginExperiment;
+       // private bool _beginExperiment;
        private bool _experimentDone;
        private bool _skipTrial;
        public static int trialID = -1;
-       public static bool leftResponseGiven;
-       public static bool rightResponseGiven; 
-       public static bool leftReady;
-       public static bool rightReady;
+       [SyncVar] public bool leftResponseGiven;
+       [SyncVar] public bool rightResponseGiven; 
+       [SyncVar] public bool leftReady;
+       [SyncVar] public bool rightReady;
        public static bool spawningDone;
 
        /*
@@ -65,12 +58,12 @@ public class NetExperimentManager : NetworkBehaviour
        IEnumerator Start()
        {
               // Initialize hat MeshRenderer and doors and lights animators.
-              _hatColor = sortingHat.GetComponent<MeshRenderer>().material;
-              _leftDoorAnim = leftDoor.GetComponent<Animator>();
-              _rightDoorAnim = rightDoor.GetComponent<Animator>();
-              _leftLightAnim = leftLight.GetComponent<Animator>();
-              _rightLightAnim = rightLight.GetComponent<Animator>();
-              _manager = manager.GetComponent<NetworkManagerDobby>();
+              _hatColor = GameObject.Find("SortingHat").GetComponent<MeshRenderer>().material;
+              _leftDoorAnim = GameObject.Find("LeftDoorAnim").GetComponent<Animator>();
+              _rightDoorAnim = GameObject.Find("RightDoorAnim") .GetComponent<Animator>();
+              _leftLightAnim = GameObject.Find("LeftGloomAnim").GetComponent<Animator>();
+              _rightLightAnim = GameObject.Find("RightGloomAnim").GetComponent<Animator>();
+              _manager = GameObject.Find("NetworkManager").GetComponent<NetworkManagerDobby>();
 
               // Save name of experimental condition.
               // _experimentID = UIOptions.experimentID;
@@ -96,9 +89,11 @@ public class NetExperimentManager : NetworkBehaviour
               Debug.LogWarning("before instructions");
               
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
-              _beginExperiment = false;
-              StartCoroutine(HandleInstructions());
-              yield return new WaitUntil(() => _beginExperiment);
+              // _beginExperiment = false;
+              // StartCoroutine(HandleInstructions());
+              //leftReady = false;
+              //rightReady = false;
+              yield return new WaitUntil(() => leftReady && rightReady);
               Debug.LogWarning("after instructions");
               
               // Start experiment.
@@ -278,7 +273,7 @@ public class NetExperimentManager : NetworkBehaviour
        }
 
        // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
-       private IEnumerator HandleInstructions()
+       /*private IEnumerator HandleInstructions()
        {
               yield return new WaitUntil(() => spawningDone);
               
@@ -305,5 +300,5 @@ public class NetExperimentManager : NetworkBehaviour
               // After the instructions are handled, the experiment can begin.
               yield return new WaitUntil(() => leftReady && rightReady);
               _beginExperiment = true;
-       }
+       }*/
 }
