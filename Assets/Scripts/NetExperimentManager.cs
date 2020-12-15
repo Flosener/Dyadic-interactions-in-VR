@@ -43,6 +43,13 @@ public class NetExperimentManager : NetworkBehaviour
        [SyncVar] public bool rightReady;
        public static bool spawningDone;
 
+       /*[ClientRpc]
+       public void RpcSynchronize(bool left, bool right)
+       {
+              leftReady = left;
+              rightReady = right;
+       }*/
+
        /*
         General lifecycle:
         - Start Experiment with coroutine Experiment().
@@ -111,6 +118,11 @@ public class NetExperimentManager : NetworkBehaviour
 
               UIOptions.experimentID = "EntranceHall";
               SceneManager.LoadScene("EntranceHall");
+       }
+
+       private void Update()
+       {
+              //RpcSynchronize(leftReady, rightReady);
        }
 
        // Coroutine for all experimental conditions.

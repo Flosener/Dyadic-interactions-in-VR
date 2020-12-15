@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1161586420680334014}
   - component: {fileID: 7979279378047255621}
   - component: {fileID: 7979279378047255622}
+  - component: {fileID: 2593395967976518332}
   m_Layer: 0
   m_Name: NetExperimentManager
-  m_TagString: Untagged
+  m_TagString: NetExperimentManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,12 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  sortingHat: {fileID: 0}
-  leftDoor: {fileID: 0}
-  rightDoor: {fileID: 0}
-  leftLight: {fileID: 0}
-  rightLight: {fileID: 0}
-  manager: {fileID: 0}
   leftResponseGiven: 0
   rightResponseGiven: 0
   leftReady: 0
@@ -69,6 +64,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 0
-  serverOnly: 0
+  serverOnly: 1
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &2593395967976518332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7979279378047255623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01

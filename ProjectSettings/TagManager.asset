@@ -9,6 +9,8 @@ TagManager:
   - NetworkManager
   - InstructionsUILeft
   - InstructionsUIRight
+  - NetExperimentManager
+  - InstructionsUI
   layers:
   - Default
   - TransparentFX

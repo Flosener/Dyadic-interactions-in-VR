@@ -73,8 +73,6 @@ public class NetParticipant : NetworkBehaviour
             netLeftCtrl.transform.Find("vr_glove_left_model_slim").transform.Find("slim_l").transform.Find("vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().enabled = false;
             netRightCtrl.transform.Find("vr_wand").transform.Find("slim_r").transform.Find("vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().enabled = false;
             netRightCtrl.transform.Find("vr_wand").transform.Find("Wand4").gameObject.SetActive(false);
-
-            expManager = GameObject.Find("NetExperimentManager").GetComponent<NetExperimentManager>();
         }
     }
  
@@ -96,7 +94,14 @@ public class NetParticipant : NetworkBehaviour
         {
             CmdRightResponse();
             Debug.LogWarning("Right response given");
-        } 
+        }
+
+        // Get ExperimentManager
+        if (expManager == null)
+        {
+            expManager = GameObject.FindGameObjectWithTag("NetExperimentManager").GetComponent<NetExperimentManager>();
+            Debug.LogWarning(expManager);
+        }
         
         // Synchronize position on network.
         UpdateHeadAndHands();

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetworkManagerDobby : NetworkManager
 {
-    private GameObject _experimentManager;
+    private GameObject _experimentRoom;
     private GameObject _instructionsLeft;
     private GameObject _instructionsRight;
     private NetworkConnection _leftConnection;
@@ -27,8 +27,8 @@ public class NetworkManagerDobby : NetworkManager
                 break;
             case 2:
                 _rightConnection = conn;
-                _experimentManager = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "NetExperimentManager"));
-                NetworkServer.Spawn(_experimentManager);
+                _experimentRoom = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "ExperimentRoom"));
+                NetworkServer.Spawn(_experimentRoom);
                 _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
                 NetworkServer.Spawn(_instructionsLeft, _leftConnection);
                 _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
