@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Contexts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Valve.VR;
@@ -89,9 +90,10 @@ public class NetExperimentManager : NetworkBehaviour
                      }
               }
 
+              // for debugging only, later: join exp3
               UIOptions.isHost = false;
               _experimentID = "Joint_GoNoGo";
-              Debug.LogWarning("after spawning");
+              Debug.LogWarning("before instructions");
               
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               _beginExperiment = false;

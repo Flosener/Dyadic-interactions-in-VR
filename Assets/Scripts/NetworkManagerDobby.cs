@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class NetworkManagerDobby : NetworkManager
 {
-    private GameObject _instructions;
+    private GameObject _instructionsLeft;
+    private GameObject _instructionsRight;
     private NetworkConnection _leftConnection;
     private NetworkConnection _rightConnection;
 
@@ -17,8 +18,6 @@ public class NetworkManagerDobby : NetworkManager
         GameObject participant = Instantiate(playerPrefab, position, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, participant);
         
-        Debug.LogWarning(participant.transform.position);
-        
         // Save network connections of both participants for participant-specific input authority and tell ExperimentManager that spawning is done.
         switch (numPlayers)
         {
@@ -27,10 +26,17 @@ public class NetworkManagerDobby : NetworkManager
                 break;
             case 2:
                 _rightConnection = conn;
-                _instructions = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUI"));
-                NetworkServer.Spawn(_instructions);
-                _instructions.GetComponent<NetworkIdentity>().AssignClientAuthority(_leftConnection);
-                _instructions.GetComponent<NetworkIdentity>().AssignClientAuthority(_rightConnection);
+                // _instructions = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUI"));
+                // NetworkServer.Spawn(_instructions);
+                _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
+                NetworkServer.Spawn(_instructionsLeft, _leftConnection);
+                _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
+                NetworkServer.Spawn(_instructionsRight, _rightConnection);
+                //NetworkServer.SpawnObjects();
+                Debug.LogWarning("spawn done");
+                // _instructions.transform.Find("JointGoNoGoLeft").GetComponent<NetworkIdentity>().AssignClientAuthority(_leftConnection);
+                // Debug.LogWarning(_instructions.transform.Find("JointGoNoGoLeft").GetComponent<NetworkIdentity>());
+                // _instructions.transform.Find("JointGoNoGoRight").GetComponent<NetworkIdentity>().AssignClientAuthority(_rightConnection);
                 NetExperimentManager.spawningDone = true;
                 break;
         }
@@ -39,9 +45,14 @@ public class NetworkManagerDobby : NetworkManager
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         // destroy instructions
-        if (_instructions != null)
+        if (_instructionsLeft != null)
         {
-            NetworkServer.Destroy(_instructions);
+            NetworkServer.Destroy(_instructionsLeft);
+        }
+        
+        if (_instructionsRight != null)
+        {
+            NetworkServer.Destroy(_instructionsRight);
         }
 
         // call base functionality (actually destroys the player)

@@ -23,7 +23,6 @@ public class Participant : MonoBehaviour
         // Get CharacterController for movement.
         _charController = GetComponent<UnityEngine.CharacterController>();
 
-        // for debugging only, later: join exp3
         UIOptions.experimentID = "Joint_GoNoGo";
         UIOptions.isHost = false;
 
