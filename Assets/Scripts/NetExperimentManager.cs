@@ -9,6 +9,7 @@ using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Random = UnityEngine.Random;
 using Mirror;
+using Valve.VR.Extras;
 
 public class NetExperimentManager : NetworkBehaviour
 {
@@ -20,6 +21,8 @@ public class NetExperimentManager : NetworkBehaviour
        private Animator _leftLightAnim;
        private Animator _rightLightAnim;
        // private GameObject _ui;
+       private GameObject leftUI;
+       private GameObject rightUI;
 
        // Data variables.
        private string _experimentID;
@@ -49,6 +52,30 @@ public class NetExperimentManager : NetworkBehaviour
               leftReady = left;
               rightReady = right;
        }*/
+       
+       [Command(ignoreAuthority = true)]
+       public void CmdLeftResponse()
+       {
+              if (leftUI != null)
+              {
+                     NetworkServer.Destroy(leftUI);
+                     leftReady = true;
+              }
+              
+              leftResponseGiven = true;
+       }
+
+       [Command(ignoreAuthority = true)]
+       public void CmdRightResponse()
+       {
+              if (rightUI != null)
+              {
+                     NetworkServer.Destroy(rightUI);
+                     rightReady = true;
+              }
+              
+              rightResponseGiven = true;
+       }
 
        /*
         General lifecycle:
@@ -71,6 +98,8 @@ public class NetExperimentManager : NetworkBehaviour
               _leftLightAnim = GameObject.Find("LeftGloomAnim").GetComponent<Animator>();
               _rightLightAnim = GameObject.Find("RightGloomAnim").GetComponent<Animator>();
               _manager = GameObject.Find("NetworkManager").GetComponent<NetworkManagerDobby>();
+              leftUI = GameObject.FindGameObjectWithTag("InstructionsUILeft");
+              rightUI = GameObject.FindGameObjectWithTag("InstructionsUIRight");
 
               // Save name of experimental condition.
               // _experimentID = UIOptions.experimentID;
@@ -123,6 +152,19 @@ public class NetExperimentManager : NetworkBehaviour
        private void Update()
        {
               //RpcSynchronize(leftReady, rightReady);
+              
+              // "B" button on right Oculus controller.
+              if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 0 || NetExperimentManager.trialID == 1))
+              {
+                     CmdLeftResponse();
+                     Debug.LogWarning("Left response given");
+              }
+              // "A" button on right Oculus controller.
+              else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 2 || NetExperimentManager.trialID == 3))
+              {
+                     CmdRightResponse();
+                     Debug.LogWarning("Right response given");
+              }
        }
 
        // Coroutine for all experimental conditions.

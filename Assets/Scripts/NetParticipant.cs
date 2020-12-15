@@ -83,25 +83,14 @@ public class NetParticipant : NetworkBehaviour
             return;
         }
         
-        // "B" button on right Oculus controller.
-        if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 0 || NetExperimentManager.trialID == 1))
-        {
-            CmdLeftResponse();
-            Debug.LogWarning("Left response given");
-        }
-        // "A" button on right Oculus controller.
-        else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 2 || NetExperimentManager.trialID == 3))
-        {
-            CmdRightResponse();
-            Debug.LogWarning("Right response given");
-        }
+        
 
         // Get ExperimentManager
-        if (expManager == null)
+        /*if (expManager == null)
         {
-            expManager = GameObject.FindGameObjectWithTag("NetExperimentManager").GetComponent<NetExperimentManager>();
+            expManager = GameObject.FindGameObjectWithTag("ExperimentRoom").GetComponent<NetExperimentManager>();
             Debug.LogWarning(expManager);
-        }
+        }*/
         
         // Synchronize position on network.
         UpdateHeadAndHands();
@@ -135,21 +124,5 @@ public class NetParticipant : NetworkBehaviour
                 netRightCtrl.transform.rotation = localRightHand.transform.rotation;
             }
         }
-    }
-
-    [Command]
-    public void CmdLeftResponse()
-    {
-        NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUILeft"));
-        expManager.leftResponseGiven = true;
-        expManager.leftReady = true;
-    }
-
-    [Command]
-    public void CmdRightResponse()
-    {
-        NetworkServer.Destroy(GameObject.FindGameObjectWithTag("InstructionsUIRight"));
-        expManager.rightResponseGiven = true;
-        expManager.rightReady = true;
     }
 }
