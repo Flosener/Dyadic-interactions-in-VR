@@ -8,8 +8,7 @@ public class NetworkManagerDobby : NetworkManager
 {
     private GameObject _instructionsLeft;
     private GameObject _instructionsRight;
-    private NetworkConnection _leftConnection;
-    private NetworkConnection _rightConnection;
+    private NetExperimentManager _expManager;
 
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
@@ -18,20 +17,15 @@ public class NetworkManagerDobby : NetworkManager
         GameObject participant = Instantiate(playerPrefab, position, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, participant);
         
-        // Save network connections of both participants for UI auth, spawn UI and tell ExperimentManager that spawning is done.
-        switch (numPlayers)
+        // Spawn UI and tell ExperimentManager that spawning is done.
+        if (numPlayers == 2)
         {
-            case 1:
-                _leftConnection = conn;
-                break;
-            case 2:
-                _rightConnection = conn;
-                _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
-                NetworkServer.Spawn(_instructionsLeft, _leftConnection);
-                _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
-                NetworkServer.Spawn(_instructionsRight, _rightConnection);
-                NetExperimentManager.spawningDone = true;
-                break;
+            _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
+            NetworkServer.Spawn(_instructionsLeft);
+            _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
+            NetworkServer.Spawn(_instructionsRight);
+            _expManager = GameObject.FindGameObjectWithTag("ExperimentManager").GetComponent<NetExperimentManager>();
+            _expManager.RpcSpawningDone();
         }
     }
 

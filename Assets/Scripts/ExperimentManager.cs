@@ -4,17 +4,10 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-using Mirror;
 
 public class ExperimentManager : MonoBehaviour
 {
        // Scene object/animation variables.
-       public GameObject sortingHat;
-       public GameObject leftDoor;
-       public GameObject rightDoor;
-       public GameObject leftLight;
-       public GameObject rightLight;
-       
        private Material _hatColor;
        private Animator _leftDoorAnim;
        private Animator _rightDoorAnim;
@@ -37,7 +30,7 @@ public class ExperimentManager : MonoBehaviour
        private bool _beginExperiment;
        private bool _experimentDone;
        private bool _skipTrial;
-       public static int trialID;
+       private int _trialID;
        public static bool leftResponseGiven;
        public static bool rightResponseGiven;
        public static bool leftReady;
@@ -58,30 +51,14 @@ public class ExperimentManager : MonoBehaviour
        IEnumerator Start()
        {
               // Initialize hat MeshRenderer and doors and lights animators.
-              _hatColor = sortingHat.GetComponent<MeshRenderer>().material;
-              _leftDoorAnim = leftDoor.GetComponent<Animator>();
-              _rightDoorAnim = rightDoor.GetComponent<Animator>();
-              _leftLightAnim = leftLight.GetComponent<Animator>();
-              _rightLightAnim = rightLight.GetComponent<Animator>();
+              _hatColor = GameObject.Find("SortingHat").GetComponent<MeshRenderer>().material;
+              _leftDoorAnim = GameObject.Find("LeftDoorAnim").GetComponent<Animator>();
+              _rightDoorAnim = GameObject.Find("RightDoorAnim") .GetComponent<Animator>();
+              _leftLightAnim = GameObject.Find("LeftGloomAnim").GetComponent<Animator>();
+              _rightLightAnim = GameObject.Find("RightGloomAnim").GetComponent<Animator>();
 
               // Save name of experimental condition.
               _experimentID = UIOptions.experimentID;
-              Debug.LogWarning(_experimentID);
-
-              // When joining the networked experiment, spawn both participants.
-              /*if (_experimentID == "Joint_GoNoGo")
-              {
-                     if (UIOptions.isHost)
-                     {
-                            _manager.StartHost();
-                            Debug.Log("Started as host.");
-                     }
-                     else
-                     {
-                            _manager.StartClient();
-                            Debug.Log("Started as client.");
-                     }
-              }*/
 
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               _beginExperiment = false;
@@ -127,8 +104,8 @@ public class ExperimentManager : MonoBehaviour
 
                             // If we are in the individual Go-NoGo task, skip unnecessary trials.
                             if (UIOptions.experimentID == "Individual_GoNoGo" &&
-                                ((Participant.leftSpawned && (trialID == 2 || trialID == 3)) ||
-                                 (!Participant.leftSpawned && (trialID == 0 || trialID == 1))))
+                                ((Participant.leftSpawned && (_trialID == 2 || _trialID == 3)) ||
+                                 (!Participant.leftSpawned && (_trialID == 0 || _trialID == 1))))
                             {
                                    yield return new WaitForSeconds(1f);
                                    _response = "none";
@@ -156,7 +133,7 @@ public class ExperimentManager : MonoBehaviour
                             }
 
                             // Check for trial type and play corresponding ending-light animation.
-                            switch (trialID)
+                            switch (_trialID)
                             {
                                    case 0:
                                           _leftLightAnim.Play("doorGloom");
@@ -187,8 +164,8 @@ public class ExperimentManager : MonoBehaviour
        private void StartTrial()
        {
               // Get a random integer, identifying the different trial cases.
-              trialID = Random.Range(0, 4);
-              switch (trialID)
+              _trialID = Random.Range(0, 4);
+              switch (_trialID)
               {
                      case 0:
                             GreenCompatible();
@@ -267,12 +244,9 @@ public class ExperimentManager : MonoBehaviour
        // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
        private IEnumerator HandleInstructions()
        {
-              // UI has to be spawned by NetworkManagerDobby in the networked experiment, for individual experiments the UI is already in the scene.
-              if (_experimentID != "Joint_GoNoGo")
-              { 
-                     _ui = GameObject.Find("InstructionsUI");
-              }
-              
+              // Get UI from scene.
+              _ui = GameObject.Find("InstructionsUI");
+
               // Set participants' readiness to false at the beginning.
               leftReady = false;
               rightReady = false;
@@ -281,7 +255,6 @@ public class ExperimentManager : MonoBehaviour
               switch (_experimentID)
               {
                      case "Individual_TwoChoice":
-                            Debug.LogWarning("in instructions");
                             GameObject instructionsUI = _ui.transform.Find("IndividualTwoChoice").gameObject;
                             instructionsUI.SetActive(true);
                             yield return new WaitUntil(() => leftReady || rightReady);
@@ -292,6 +265,7 @@ public class ExperimentManager : MonoBehaviour
                             GameObject instructionsUILeft = _ui.transform.Find("IndividualGoNoGoLeft").gameObject;
                             GameObject instructionsUIRight = _ui.transform.Find("IndividualGoNoGoRight").gameObject;
                             
+                            // If participant is on the left side, only consider left UI.
                             if (Participant.leftSpawned)
                             {
                                    instructionsUILeft.SetActive(true);

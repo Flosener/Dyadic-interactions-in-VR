@@ -20,9 +20,8 @@ public class NetExperimentManager : NetworkBehaviour
        private Animator _rightDoorAnim;
        private Animator _leftLightAnim;
        private Animator _rightLightAnim;
-       // private GameObject _ui;
-       private GameObject leftUI;
-       private GameObject rightUI;
+       private GameObject _leftUI;
+       private GameObject _rightUI;
 
        // Data variables.
        private string _experimentID;
@@ -36,46 +35,13 @@ public class NetExperimentManager : NetworkBehaviour
 
        // Experiment tool/helper variables.
        private float _trialStartTime;
-       // private bool _beginExperiment;
        private bool _experimentDone;
-       private bool _skipTrial;
        public static int trialID = -1;
-       [SyncVar] public bool leftResponseGiven;
-       [SyncVar] public bool rightResponseGiven; 
-       [SyncVar] public bool leftReady;
-       [SyncVar] public bool rightReady;
-       public static bool spawningDone;
-
-       /*[ClientRpc]
-       public void RpcSynchronize(bool left, bool right)
-       {
-              leftReady = left;
-              rightReady = right;
-       }*/
-       
-       [Command(ignoreAuthority = true)]
-       public void CmdLeftResponse()
-       {
-              if (leftUI != null)
-              {
-                     NetworkServer.Destroy(leftUI);
-                     leftReady = true;
-              }
-              
-              leftResponseGiven = true;
-       }
-
-       [Command(ignoreAuthority = true)]
-       public void CmdRightResponse()
-       {
-              if (rightUI != null)
-              {
-                     NetworkServer.Destroy(rightUI);
-                     rightReady = true;
-              }
-              
-              rightResponseGiven = true;
-       }
+       [SerializeField] [SyncVar] private bool _leftResponseGiven;
+       [SerializeField] [SyncVar] private bool _rightResponseGiven; 
+       [SerializeField] [SyncVar] private bool _leftReady;
+       [SerializeField] [SyncVar] private bool _rightReady;
+       [SerializeField] [SyncVar] private bool _spawningDone;
 
        /*
         General lifecycle:
@@ -91,19 +57,6 @@ public class NetExperimentManager : NetworkBehaviour
 
        IEnumerator Start()
        {
-              // Initialize hat MeshRenderer and doors and lights animators.
-              _hatColor = GameObject.Find("SortingHat").GetComponent<MeshRenderer>().material;
-              _leftDoorAnim = GameObject.Find("LeftDoorAnim").GetComponent<Animator>();
-              _rightDoorAnim = GameObject.Find("RightDoorAnim") .GetComponent<Animator>();
-              _leftLightAnim = GameObject.Find("LeftGloomAnim").GetComponent<Animator>();
-              _rightLightAnim = GameObject.Find("RightGloomAnim").GetComponent<Animator>();
-              _manager = GameObject.Find("NetworkManager").GetComponent<NetworkManagerDobby>();
-              leftUI = GameObject.FindGameObjectWithTag("InstructionsUILeft");
-              rightUI = GameObject.FindGameObjectWithTag("InstructionsUIRight");
-
-              // Save name of experimental condition.
-              // _experimentID = UIOptions.experimentID;
-
               // When joining the networked experiment, spawn both participants.
               if (_experimentID == "Joint_GoNoGo")
               {
@@ -118,19 +71,28 @@ public class NetExperimentManager : NetworkBehaviour
                             Debug.Log("Started as client.");
                      }
               }
+              
+              yield return new WaitUntil(() => _spawningDone);
+              
+              // Initialize hat MeshRenderer and doors and lights animators.
+              _hatColor = GameObject.Find("SortingHat").GetComponent<MeshRenderer>().material;
+              _leftDoorAnim = GameObject.Find("LeftDoorAnim").GetComponent<Animator>();
+              _rightDoorAnim = GameObject.Find("RightDoorAnim") .GetComponent<Animator>();
+              _leftLightAnim = GameObject.Find("LeftGloomAnim").GetComponent<Animator>();
+              _rightLightAnim = GameObject.Find("RightGloomAnim").GetComponent<Animator>();
+              _manager = GameObject.Find("NetworkManager").GetComponent<NetworkManagerDobby>();
+              _leftUI = GameObject.FindGameObjectWithTag("InstructionsUILeft");
+              _rightUI = GameObject.FindGameObjectWithTag("InstructionsUIRight");
+
+              // Save name of experimental condition.
+              // _experimentID = UIOptions.experimentID;
 
               // for debugging only, later: join exp3
               UIOptions.isHost = false;
               _experimentID = "Joint_GoNoGo";
-              Debug.LogWarning("before instructions");
               
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
-              // _beginExperiment = false;
-              // StartCoroutine(HandleInstructions());
-              //leftReady = false;
-              //rightReady = false;
-              yield return new WaitUntil(() => leftReady && rightReady);
-              Debug.LogWarning("after instructions");
+              yield return new WaitUntil(() => _leftReady && _rightReady);
               
               // Start experiment.
               StartCoroutine(Experiment(3f, 2, 5));
@@ -149,24 +111,6 @@ public class NetExperimentManager : NetworkBehaviour
               SceneManager.LoadScene("EntranceHall");
        }
 
-       private void Update()
-       {
-              //RpcSynchronize(leftReady, rightReady);
-              
-              // "B" button on right Oculus controller.
-              if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 0 || NetExperimentManager.trialID == 1))
-              {
-                     CmdLeftResponse();
-                     Debug.LogWarning("Left response given");
-              }
-              // "A" button on right Oculus controller.
-              else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 2 || NetExperimentManager.trialID == 3))
-              {
-                     CmdRightResponse();
-                     Debug.LogWarning("Right response given");
-              }
-       }
-
        // Coroutine for all experimental conditions.
        private IEnumerator Experiment(float seconds, int blockCount, int trialCount)
        {
@@ -179,38 +123,27 @@ public class NetExperimentManager : NetworkBehaviour
                             yield return new WaitForSeconds(seconds);
 
                             // Reset response check to false.
-                            leftResponseGiven = false;
-                            rightResponseGiven = false;
-                            _skipTrial = false;
+                            _leftResponseGiven = false;
+                            _rightResponseGiven = false;
                             
                             // Save the trial start time and select random trial.
                             _trialStartTime = Time.time;
                             StartTrial();
-
-                            // If we are in the individual Go-NoGo task, skip unnecessary trials.
-                            if (UIOptions.experimentID == "Individual_GoNoGo" &&
-                                ((Participant.leftSpawned && (trialID == 2 || trialID == 3)) ||
-                                 (!Participant.leftSpawned && (trialID == 0 || trialID == 1))))
-                            {
-                                   yield return new WaitForSeconds(1f);
-                                   _response = "none";
-                                   _skipTrial = true;
-                            }
                             
                             // Wait for participant's response in Update().
-                            yield return new WaitUntil(() => leftResponseGiven || rightResponseGiven || _skipTrial);
+                            yield return new WaitUntil(() => _leftResponseGiven || _rightResponseGiven);
                             
                             // Get reaction time of the trial.
                             _RT = Time.time - _trialStartTime;
                             
                             // Check given response and play corresponding open-door animation.
-                            if (leftResponseGiven && !_skipTrial)
+                            if (_leftResponseGiven)
                             {
                                    _leftDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
                                    _response = "left";
                             }
-                            else if (rightResponseGiven && !_skipTrial)
+                            else if (_rightResponseGiven)
                             {
                                    _rightDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
@@ -310,14 +243,14 @@ public class NetExperimentManager : NetworkBehaviour
        }
        
        // Method for binding and writing data to .csv file.
-       private void AddRecord(string _experimentID, float _RT, string _compatibility, string _color, string _irrelevantStimulus, string _response, string _correctResponse, bool _correctness, string filepath)
+       private void AddRecord(string experimentID, float RT, string compatibility, string color, string irrelevantStimulus, string response, string correctResponse, bool correctness, string filepath)
        {
               try
               {
                      // Instantiate StreamWriter object and write line to file including all recorded variables.
                      using (StreamWriter file = new StreamWriter(@filepath, true))
                      {
-                            file.WriteLine(_experimentID + "," + _RT + "," + _compatibility + "," + _color + "," + _irrelevantStimulus + "," + _response + "," + _correctResponse + "," + _correctness);
+                            file.WriteLine(experimentID + "," + RT + "," + compatibility + "," + color + "," + irrelevantStimulus + "," + response + "," + correctResponse + "," + correctness);
                      }
               }
               catch (Exception ex)
@@ -325,34 +258,37 @@ public class NetExperimentManager : NetworkBehaviour
                      throw new ApplicationException("An error occured: " + ex);
               }
        }
-
-       // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
-       /*private IEnumerator HandleInstructions()
+       
+       // Get left response.
+       [Command(ignoreAuthority = true)]
+       public void CmdLeftResponse()
        {
-              yield return new WaitUntil(() => spawningDone);
-              
-              Debug.LogWarning("in instructions after spawning done");
-
-              GameObject leftUI = GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoLeft").gameObject;
-              GameObject rightUI = GameObject.FindGameObjectWithTag("InstructionsUI").transform.Find("JointGoNoGoRight").gameObject;
-
-              Debug.LogWarning("found UI gameobject");
-
-              if (UIOptions.isHost)
+              // Destroy left instructions, when participant gives input.
+              if (_leftUI != null)
               {
-                     Debug.LogWarning("in left instructions");
-                     yield return new WaitUntil(() => leftReady);
-                     leftUI.SetActive(false);
+                     NetworkServer.Destroy(_leftUI);
+                     _leftReady = true;
               }
-              else
-              {
-                     Debug.LogWarning("in right instructions");
-                     yield return new WaitUntil(() => rightReady);
-                     rightUI.SetActive(false);
-              }
+              _leftResponseGiven = true;
+       }
 
-              // After the instructions are handled, the experiment can begin.
-              yield return new WaitUntil(() => leftReady && rightReady);
-              _beginExperiment = true;
-       }*/
+       // Get right response.
+       [Command(ignoreAuthority = true)]
+       public void CmdRightResponse()
+       {
+              // Destroy right instructions, when participant gives input.
+              if (_rightUI != null)
+              {
+                     NetworkServer.Destroy(_rightUI);
+                     _rightReady = true;
+              }
+              _rightResponseGiven = true;
+       }
+       
+       // Called on server (NetworkManagerDobby): Set spawning done flag to true.
+       [ClientRpc]
+       public void RpcSpawningDone()
+       {
+              _spawningDone = true;
+       }
 }

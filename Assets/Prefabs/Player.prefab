@@ -1568,16 +1568,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22418fc416333e488debced96444544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystickMovement:
+  _joystickMovement:
     actionPath: /actions/default/in/JoystickMove
     needsReinit: 0
-  speed: 2
-  leftHandLeftResponse:
+  _leftHandLeftResponse:
     actionPath: /actions/default/in/leftHandleftResponse
     needsReinit: 0
-  rightHandRightResponse:
+  _rightHandRightResponse:
     actionPath: /actions/default/in/rightHandrightResponse
     needsReinit: 0
+  _speed: 2
 --- !u!1 &2657951462871315722
 GameObject:
   m_ObjectHideFlags: 0
