@@ -69,15 +69,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  rightHandRightResponse:
+  _rightHandRightResponse:
     actionPath: /actions/default/in/rightHandrightResponse
     needsReinit: 0
-  rightHandLeftResponse:
+  _rightHandLeftResponse:
     actionPath: /actions/default/in/rightHandleftResponse
     needsReinit: 0
-  netHeadObj: {fileID: 8423717275740766006}
-  netLeftCtrl: {fileID: 4804690584302405389}
-  netRightCtrl: {fileID: 7176923378790204568}
+  _netHeadObj: {fileID: 8423717275740766006}
+  _netLeftCtrl: {fileID: 4804690584302405389}
+  _netRightCtrl: {fileID: 7176923378790204568}
 --- !u!114 &8467685162252917154
 MonoBehaviour:
   m_ObjectHideFlags: 0

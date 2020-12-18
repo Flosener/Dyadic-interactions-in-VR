@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 9037308080248478384}
   - component: {fileID: 9027150036609054762}
   m_Layer: 0
-  m_Name: vr_glove_right_model_slim(Clone)
+  m_Name: vr_wand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

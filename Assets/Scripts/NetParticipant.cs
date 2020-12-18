@@ -98,13 +98,13 @@ public class NetParticipant : NetworkBehaviour
     private void GetResponse()
     {
         // "B" button on right Oculus controller.
-        if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 0 || NetExperimentManager.trialID == 1))
+        if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1))
         {
             _expManager.CmdLeftResponse();
             Debug.LogWarning("Left response given");
         }
         // "A" button on right Oculus controller.
-        else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (NetExperimentManager.trialID == -1 || NetExperimentManager.trialID == 2 || NetExperimentManager.trialID == 3))
+        else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 2 || _expManager.trialID == 3))
         {
             _expManager.CmdRightResponse();
             Debug.LogWarning("Right response given");

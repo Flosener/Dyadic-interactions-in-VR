@@ -36,7 +36,7 @@ public class NetExperimentManager : NetworkBehaviour
        // Experiment tool/helper variables.
        private float _trialStartTime;
        private bool _experimentDone;
-       public static int trialID = -1;
+       [SerializeField] [SyncVar] public int trialID = -1;
        [SerializeField] [SyncVar] private bool _leftResponseGiven;
        [SerializeField] [SyncVar] private bool _rightResponseGiven; 
        [SerializeField] [SyncVar] private bool _leftReady;
@@ -99,7 +99,7 @@ public class NetExperimentManager : NetworkBehaviour
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
-              _experimentDone = false;
+              _experimentDone = true;
 
               // After finishing the experiment, (stop server and) return to the EntranceHall.
               if (_experimentID == "Joint_GoNoGo" && _manager.isNetworkActive)
@@ -171,7 +171,7 @@ public class NetExperimentManager : NetworkBehaviour
                             _correctness = _response == _correctResponse;
                             
                             // Add all values to results.
-                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "D:/Studium/Unity/Dyadic-interactions-in-VR/Assets/Results/results.txt");
+                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
                      }
               }
               // Back to Start() coroutine if all trials in all blocks have been completed.
@@ -182,7 +182,13 @@ public class NetExperimentManager : NetworkBehaviour
        private void StartTrial()
        {
               // Get a random integer, identifying the different trial cases.
-              trialID = Random.Range(0, 4);
+              if (UIOptions.isHost)
+              {
+                     // Send command to server from host-client; server will synchronize trialID back to all clients.
+                     CmdRandomTrial();
+              }
+              Debug.LogWarning($"Synchronized trialID: {trialID}");
+              
               switch (trialID)
               {
                      case 0:
@@ -258,6 +264,14 @@ public class NetExperimentManager : NetworkBehaviour
                      throw new ApplicationException("An error occured: " + ex);
               }
        }
+
+       // Get random trial.
+       [Command(ignoreAuthority = true)]
+       private void CmdRandomTrial()
+       {
+              trialID = Random.Range(0, 4);
+              Debug.LogWarning($"TrialID on host client: {trialID}");
+       }
        
        // Get left response.
        [Command(ignoreAuthority = true)]
@@ -284,7 +298,7 @@ public class NetExperimentManager : NetworkBehaviour
               }
               _rightResponseGiven = true;
        }
-       
+
        // Called on server (NetworkManagerDobby): Set spawning done flag to true.
        [ClientRpc]
        public void RpcSpawningDone()
