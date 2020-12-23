@@ -8,7 +8,7 @@ public class NetParticipant : NetworkBehaviour
     [SerializeField] private SteamVR_Action_Boolean _rightHandRightResponse;
     [SerializeField] private SteamVR_Action_Boolean _rightHandLeftResponse;
     private NetExperimentManager _expManager;
-
+ 
     // Source GameObjects head + hands of local player.
     private GameObject _localPlayer;
     private GameObject _headlessPlayer;
@@ -76,7 +76,6 @@ public class NetParticipant : NetworkBehaviour
         if (_expManager == null)
         {
             _expManager = GameObject.FindGameObjectWithTag("ExperimentManager").GetComponent<NetExperimentManager>();
-            Debug.LogWarning(_expManager);
         }
     }
  
@@ -101,14 +100,16 @@ public class NetParticipant : NetworkBehaviour
         // "B" button on right Oculus controller.
         if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1))
         {
+            _expManager.CmdReactionTime();
             _expManager.CmdLeftResponse();
-            Debug.LogWarning("Left response given");
+            Debug.Log("Left response given");
         }
         // "A" button on right Oculus controller.
         else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 2 || _expManager.trialID == 3))
         {
+            _expManager.CmdReactionTime();
             _expManager.CmdRightResponse();
-            Debug.LogWarning("Right response given");
+            Debug.Log("Right response given");
         }
     }
     

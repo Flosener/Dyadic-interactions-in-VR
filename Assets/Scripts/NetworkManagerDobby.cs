@@ -18,12 +18,12 @@ public class NetworkManagerDobby : NetworkManager
             if (UIOptions.isHost)
             {
                 StartHost();
-                Debug.LogWarning("Started as host.");
+                Debug.Log("Started as host.");
             }
             else
             {
                 StartClient();
-                Debug.LogWarning("Started as client.");
+                Debug.Log("Started as client.");
             }
         }
     }

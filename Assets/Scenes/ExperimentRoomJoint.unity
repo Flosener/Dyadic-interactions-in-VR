@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
+  _sameTrial: 0
   trialID: -1
   _leftResponseGiven: 0
   _rightResponseGiven: 0
@@ -14163,7 +14164,6 @@ GameObject:
   - component: {fileID: 3584231364239835651}
   - component: {fileID: 5478007138503525151}
   - component: {fileID: 5478007138503525149}
-  - component: {fileID: 5478007138503525148}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: NetworkManager
@@ -14171,21 +14171,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &5478007138503525148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5478007138503525147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showGUI: 1
-  offsetX: 0
-  offsetY: 0
 --- !u!114 &5478007138503525149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14248,7 +14233,7 @@ MonoBehaviour:
   offlineScene: 
   onlineScene: 
   transport: {fileID: 5478007138503525149}
-  networkAddress: 192.168.2.109
+  networkAddress: 192.168.2.107
   maxConnections: 2
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60

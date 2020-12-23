@@ -17,7 +17,7 @@ public class ExperimentManager : MonoBehaviour
 
        // Data variables.
        private string _experimentID;
-       private float _RT;
+       public float _RT;
        private string _compatibility;
        private string _color;
        private string _irrelevantStimulus;
@@ -26,15 +26,15 @@ public class ExperimentManager : MonoBehaviour
        private bool _correctness;
 
        // Experiment tool/helper variables.
-       private float _trialStartTime;
+       public float _trialStartTime;
        private bool _beginExperiment;
        private bool _experimentDone;
        private bool _skipTrial;
        private int _trialID;
-       public static bool leftResponseGiven;
-       public static bool rightResponseGiven;
-       public static bool leftReady;
-       public static bool rightReady;
+       private bool _leftResponseGiven;
+       private bool _rightResponseGiven;
+       private bool _leftReady;
+       private bool _rightReady;
 
        /*
         General lifecycle:
@@ -76,6 +76,29 @@ public class ExperimentManager : MonoBehaviour
               SceneManager.LoadScene("EntranceHall");
        }
 
+       private void Update()
+       {
+              // DEBUG: Change input source back to controller.
+              
+              // "X" button on left Oculus controller.
+              if ((Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_TwoChoice") || 
+                  (Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_GoNoGo" && Participant.leftSpawned))
+              {
+                     // Take reaction time directly after response.
+                     _RT = Time.time - _trialStartTime;
+                     _leftResponseGiven = true;
+                     _leftReady = true;
+              }
+              // "A" button on right Oculus controller.
+              else if ((Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_TwoChoice") || 
+                       (Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_GoNoGo" && !Participant.leftSpawned))
+              {
+                     _RT = Time.time - _trialStartTime;
+                     _rightResponseGiven = true;
+                     _rightReady = true;
+              }
+       }
+
        // Coroutine for all experimental conditions.
        private IEnumerator Experiment(float seconds, int blockCount, int trialCount)
        {
@@ -88,8 +111,8 @@ public class ExperimentManager : MonoBehaviour
                             yield return new WaitForSeconds(seconds);
 
                             // Reset response check to false.
-                            leftResponseGiven = false;
-                            rightResponseGiven = false;
+                            _leftResponseGiven = false;
+                            _rightResponseGiven = false;
                             _skipTrial = false;
                             
                             // Select random trial.
@@ -106,19 +129,16 @@ public class ExperimentManager : MonoBehaviour
                             }
                             
                             // Wait for participant's response in Update().
-                            yield return new WaitUntil(() => leftResponseGiven || rightResponseGiven || _skipTrial);
-                            
-                            // Get reaction time of the trial.
-                            _RT = Time.time - _trialStartTime;
-                            
+                            yield return new WaitUntil(() => _leftResponseGiven || _rightResponseGiven || _skipTrial);
+
                             // Check given response and play corresponding open-door animation.
-                            if (leftResponseGiven && !_skipTrial)
+                            if (_leftResponseGiven && !_skipTrial)
                             {
                                    _leftDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
                                    _response = "left";
                             }
-                            else if (rightResponseGiven && !_skipTrial)
+                            else if (_rightResponseGiven && !_skipTrial)
                             {
                                    _rightDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
@@ -245,8 +265,8 @@ public class ExperimentManager : MonoBehaviour
               _ui = GameObject.Find("InstructionsUI");
 
               // Set participants' readiness to false at the beginning.
-              leftReady = false;
-              rightReady = false;
+              _leftReady = false;
+              _rightReady = false;
               
               // Show instructions depending on the room and spawn position.
               switch (_experimentID)
@@ -254,7 +274,7 @@ public class ExperimentManager : MonoBehaviour
                      case "Individual_TwoChoice":
                             GameObject instructionsUI = _ui.transform.Find("IndividualTwoChoice").gameObject;
                             instructionsUI.SetActive(true);
-                            yield return new WaitUntil(() => leftReady || rightReady);
+                            yield return new WaitUntil(() => _leftReady || _rightReady);
                             instructionsUI.SetActive(false);
                             break;
                      
@@ -266,13 +286,13 @@ public class ExperimentManager : MonoBehaviour
                             if (Participant.leftSpawned)
                             {
                                    instructionsUILeft.SetActive(true);
-                                   yield return new WaitUntil(() => leftReady);
+                                   yield return new WaitUntil(() => _leftReady);
                                    instructionsUILeft.SetActive(false);
                             }
                             else
                             {
                                    instructionsUIRight.SetActive(true);
-                                   yield return new WaitUntil(() => rightReady);
+                                   yield return new WaitUntil(() => _rightReady);
                                    instructionsUIRight.SetActive(false);
                             }
                             break;

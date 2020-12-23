@@ -16,13 +16,10 @@ public class Participant : MonoBehaviour
     
     private UnityEngine.CharacterController _charController;
     public static bool leftSpawned;
+    
 
     private void Start()
     {
-        // DEBUG
-        // UIOptions.experimentID = "Joint_GoNoGo";
-        // UIOptions.isHost = false;
-        
         // Get CharacterController for movement.
         _charController = GetComponent<UnityEngine.CharacterController>();
 
@@ -51,35 +48,10 @@ public class Participant : MonoBehaviour
 
     private void Update()
     {
-        // Get response from participant.
-        GetResponse();
-        
         // Do not allow movement in experiment rooms.
         if (SceneManager.GetActiveScene().name == "EntranceHall")
         {
             Move();
-        }
-    }
-
-    private void GetResponse()
-    {
-        // DEBUG: Change input source.
-        
-        // "X" button on left Oculus controller.
-        if ((Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_TwoChoice") || 
-            (Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_GoNoGo" && leftSpawned))
-        {
-            Debug.LogWarning("left response");
-            ExperimentManager.leftResponseGiven = true;
-            ExperimentManager.leftReady = true;
-        }
-        // "A" button on right Oculus controller.
-        else if ((Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_TwoChoice") || 
-                 (Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_GoNoGo" && !leftSpawned))
-        {
-            Debug.LogWarning("right response");
-            ExperimentManager.rightResponseGiven = true;
-            ExperimentManager.rightReady = true;
         }
     }
 

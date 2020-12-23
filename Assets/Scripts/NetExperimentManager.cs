@@ -20,7 +20,7 @@ public class NetExperimentManager : NetworkBehaviour
 
        // Data variables.
        private string _experimentID;
-       private float _RT;
+       [SyncVar] private float _RT;
        private string _compatibility;
        private string _color;
        private string _irrelevantStimulus;
@@ -33,12 +33,13 @@ public class NetExperimentManager : NetworkBehaviour
        private bool _experimentDone;
        private bool _trialSynchronized;
        private int _oldTrialID;
+       [SyncVar] private bool _sameTrial;
        [SerializeField] [SyncVar(hook = nameof(OnTrialChange))] public int trialID = -1;
        [SerializeField] [SyncVar] private bool _leftResponseGiven;
        [SerializeField] [SyncVar] private bool _rightResponseGiven; 
-       [SerializeField] [SyncVar] private bool _leftReady;
-       [SerializeField] [SyncVar] private bool _rightReady;
-       [SerializeField] [SyncVar] private bool _spawningDone;
+       [SyncVar] private bool _leftReady;
+       [SyncVar] private bool _rightReady;
+       [SyncVar] private bool _spawningDone;
 
        /*
         General lifecycle:
@@ -54,9 +55,7 @@ public class NetExperimentManager : NetworkBehaviour
 
        IEnumerator Start()
        {
-              Debug.LogWarning(UIOptions.isHost);
-              Debug.LogWarning(UIOptions.experimentID);
-              
+              // Wait for spawning process to finish (in NetworkManagerDobby).
               yield return new WaitUntil(() => _spawningDone);
               
               // Initialize hat MeshRenderer and doors and lights animators.
@@ -71,10 +70,6 @@ public class NetExperimentManager : NetworkBehaviour
 
               // Save name of experimental condition.
               _experimentID = UIOptions.experimentID;
-
-              // DEBUG
-              // UIOptions.isHost = false;
-              // _experimentID = "Joint_GoNoGo";
               
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               yield return new WaitUntil(() => _leftReady && _rightReady);
@@ -113,15 +108,11 @@ public class NetExperimentManager : NetworkBehaviour
                             _rightResponseGiven = false;
                             
                             // Save the trial start time and select random trial.
-                            //_trialStartTime = Time.time;
                             StartCoroutine(StartTrial());
                             
                             // Wait for participant's response in Update().
                             yield return new WaitUntil(() => _leftResponseGiven || _rightResponseGiven);
-                            
-                            // Get reaction time of the trial.
-                            _RT = Time.time - _trialStartTime;
-                            
+
                             // Check given response and play corresponding open-door animation.
                             if (_leftResponseGiven)
                             {
@@ -167,20 +158,16 @@ public class NetExperimentManager : NetworkBehaviour
        // StartTrial() randomly selects a trial.
        private IEnumerator StartTrial()
        {
-              _oldTrialID = trialID;
-              
               // Get a random integer, identifying the different trial cases.
               if (UIOptions.isHost)
               {
                      // Send command to server from host-client; server will synchronize trialID back to all clients.
                      CmdRandomTrial();
               }
+              
+              // Wait for synchronization process to finish.
+              yield return new WaitUntil(() => _trialSynchronized || _sameTrial);
 
-              yield return new WaitUntil(() => _trialSynchronized || trialID == _oldTrialID);
-              Debug.LogWarning($"Synchronized trialID: {trialID}");
-              
-              _trialStartTime = Time.time;
-              
               switch (trialID)
               {
                      case 0:
@@ -212,31 +199,38 @@ public class NetExperimentManager : NetworkBehaviour
                             _correctResponse = "right";
                             break;
               }
+              
+              // After each trial, set condition flags to false again.
               _trialSynchronized = false;
+              _sameTrial = false;
        }
        
        // There are four possible trials (2 compatible, 2 incompatible).
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
        }
 
        void GreenIncompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _rightLightAnim.Play("lightOn");
        }
        
        void RedCompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _rightLightAnim.Play("lightOn");
        }
 
        void RedIncompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
        }
@@ -258,21 +252,32 @@ public class NetExperimentManager : NetworkBehaviour
               }
        }
 
+       // Hook into trial change as condition for trial begin (see TrialStart method).
        private void OnTrialChange(int oldID, int newID)
        {
-              Debug.LogWarning("old trialID: " + trialID);
               trialID = newID;
-              Debug.LogWarning("new trialID: " + trialID);
-              
               _trialSynchronized = true;
        }
-
+       
        // Get random trial.
        [Command(ignoreAuthority = true)]
        private void CmdRandomTrial()
        {
+              _oldTrialID = trialID;
               trialID = Random.Range(0, 4);
-              Debug.LogWarning($"TrialID on host client: {trialID}");
+              
+              // Synchronized variable does not update when old and new trial are the same, such that animation is not played on client.
+              if (trialID == _oldTrialID)
+              {
+                     _sameTrial = true;
+              }
+       }
+
+       // Get reaction time right after input and send to server to sync with net player.
+       [Command(ignoreAuthority = true)]
+       public void CmdReactionTime()
+       {
+              _RT = Time.time - _trialStartTime;
        }
 
        // Get left response.
