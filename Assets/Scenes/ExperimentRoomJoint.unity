@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
+  trialID: -1
   _leftResponseGiven: 0
   _rightResponseGiven: 0
   _leftReady: 0
@@ -14239,7 +14240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e015ed374b7ad4288eeaef6f85574e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
+  dontDestroyOnLoad: 0
   runInBackground: 1
   autoStartServerBuild: 1
   showDebugMessages: 0
@@ -14247,7 +14248,7 @@ MonoBehaviour:
   offlineScene: 
   onlineScene: 
   transport: {fileID: 5478007138503525149}
-  networkAddress: 192.168.2.108
+  networkAddress: 192.168.2.109
   maxConnections: 2
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60

@@ -9,14 +9,14 @@ public class NetParticipant : NetworkBehaviour
     [SerializeField] private SteamVR_Action_Boolean _rightHandLeftResponse;
     private NetExperimentManager _expManager;
 
-    // Source GameObjects head + hands of local player
+    // Source GameObjects head + hands of local player.
     private GameObject _localPlayer;
     private GameObject _headlessPlayer;
     private GameObject _localHead;
     private GameObject _localLeftHand;
     private GameObject _localRightHand;
  
-    // Player parts viewable to others and hidden from the local player
+    // Player parts viewable to others and hidden from the local player.
     #pragma warning disable 649
     [SerializeField] private GameObject _netHeadObj;
     [SerializeField] private GameObject _netLeftCtrl;
@@ -24,24 +24,23 @@ public class NetParticipant : NetworkBehaviour
     #pragma warning restore 649
  
     // Objects tracked for server synchronization
-    // private SteamVR_TrackedObject trackedObjHead;
-    // private SteamVR_TrackedObject trackedObjRight;
-    // private SteamVR_TrackedObject trackedObjLeft;
+    private SteamVR_TrackedObject trackedObjHead;
+    private SteamVR_TrackedObject trackedObjRight;
+    private SteamVR_TrackedObject trackedObjLeft;
     
     public override void OnStartLocalPlayer()
     {
-        // find the gaming rig in the scene and link to it
+        // Find the gaming rig in the scene and link to it.
         if (_localPlayer == null)
         {
             _localPlayer = GameObject.Find("SteamVRObjects");
 
             if (_localPlayer == null)
             {
-                // prevent headless version of app from crashing
-                // depends on SteamVR version if HMD is null or simply won't move
+                // Prevent headless version of app from crashing.
                 _headlessPlayer = GameObject.Find("NoSteamVRFallbackObjects");
  
-                // when running as headless, provide default non-moving fallback objects instead
+                // When running as headless, provide default non-moving fallback objects instead.
                 _localHead = _headlessPlayer.transform.Find("FallbackObjects").gameObject;
                 _localLeftHand = _headlessPlayer.transform.Find("FallbackHand").gameObject;
                 _localRightHand = _headlessPlayer.transform.Find("FallbackHand").gameObject;
@@ -56,8 +55,8 @@ public class NetParticipant : NetworkBehaviour
             _localLeftHand = _localPlayer.transform.Find("LeftHand").gameObject;
             _localRightHand = _localPlayer.transform.Find("RightHand").gameObject;
  
-            //trackedObjRight = localRightHand.GetComponent<SteamVR_TrackedObject>();
-            //trackedObjLeft = localLeftHand.GetComponent<SteamVR_TrackedObject>(); 
+            trackedObjRight = _localRightHand.GetComponent<SteamVR_TrackedObject>();
+            trackedObjLeft = _localLeftHand.GetComponent<SteamVR_TrackedObject>(); 
         }
     }
     
@@ -73,7 +72,7 @@ public class NetParticipant : NetworkBehaviour
             _netRightCtrl.transform.Find("vr_wand").transform.Find("Wand4").gameObject.SetActive(false);
         }
         
-        // Get ExperimentManager
+        // Get ExperimentManager.
         if (_expManager == null)
         {
             _expManager = GameObject.FindGameObjectWithTag("ExperimentManager").GetComponent<NetExperimentManager>();
@@ -97,6 +96,8 @@ public class NetParticipant : NetworkBehaviour
 
     private void GetResponse()
     {
+        // DEBUG: Change back input source.
+        
         // "B" button on right Oculus controller.
         if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1))
         {
@@ -115,25 +116,25 @@ public class NetParticipant : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
-            // do nothing, net transform does all the work for us
+            // Do nothing, net transform does all the work for us.
         }
         else
         {
-            // we are the local player.
-            // Copy the values from the Rig's parts so they can be used for positioning the online presence
+            // We are the local player.
+            // Copy the values from the Rig's parts so they can be used for positioning the online presence.
             _netHeadObj.transform.position = _localHead.transform.position;
             _netHeadObj.transform.rotation = _localHead.transform.rotation;
  
             if (_localLeftHand)
             {
-                // we need to check in case player left the hand unconnected
+                // We need to check in case player left the hand unconnected.
                 _netLeftCtrl.transform.position = _localLeftHand.transform.position;
                 _netLeftCtrl.transform.rotation = _localLeftHand.transform.rotation;
             }
  
             if (_localRightHand)
             {
-                // only if right hand is connected
+                // Only if right hand is connected.
                 _netRightCtrl.transform.position = _localRightHand.transform.position;
                 _netRightCtrl.transform.rotation = _localRightHand.transform.rotation;
             }

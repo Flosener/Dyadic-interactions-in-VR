@@ -72,12 +72,6 @@ public class ExperimentManager : MonoBehaviour
               yield return new WaitForSeconds(3f);
               _experimentDone = false;
 
-              // After finishing the experiment, (stop server and) return to the EntranceHall.
-              /*if (_experimentID == "Joint_GoNoGo" && _manager.isNetworkActive)
-              {
-                     _manager.StopServer();
-              }*/
-
               UIOptions.experimentID = "EntranceHall";
               SceneManager.LoadScene("EntranceHall");
        }
@@ -98,8 +92,7 @@ public class ExperimentManager : MonoBehaviour
                             rightResponseGiven = false;
                             _skipTrial = false;
                             
-                            // Save the trial start time and select random trial.
-                            _trialStartTime = Time.time;
+                            // Select random trial.
                             StartTrial();
 
                             // If we are in the individual Go-NoGo task, skip unnecessary trials.
@@ -153,7 +146,7 @@ public class ExperimentManager : MonoBehaviour
                             _correctness = _response == _correctResponse;
                             
                             // Add all values to results.
-                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "D:/Studium/Unity/Dyadic-interactions-in-VR/Assets/Results/results.txt");
+                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
                      }
               }
               // Back to Start() coroutine if all trials in all blocks have been completed.
@@ -202,24 +195,28 @@ public class ExperimentManager : MonoBehaviour
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
        }
 
        void GreenIncompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _rightLightAnim.Play("lightOn");
        }
        
        void RedCompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _rightLightAnim.Play("lightOn");
        }
 
        void RedIncompatible()
        {
+              _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
        }

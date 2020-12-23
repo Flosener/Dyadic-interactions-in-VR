@@ -29,6 +29,7 @@ public class UIOptions : MonoBehaviour
     public void JoinJointGoNoGoAsHost()
     {
         isHost = true;
+        Debug.LogWarning("joined as host");
         experimentID = "Joint_GoNoGo";
         SceneManager.LoadScene("ExperimentRoomJoint");
     }
@@ -37,6 +38,7 @@ public class UIOptions : MonoBehaviour
     public void JoinJointGoNoGoAsClient()
     {
         isHost = false;
+        Debug.LogWarning("joined as client");
         experimentID = "Joint_GoNoGo";
         SceneManager.LoadScene("ExperimentRoomJoint");
     }

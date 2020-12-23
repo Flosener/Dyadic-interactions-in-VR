@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Remoting.Contexts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
 using Random = UnityEngine.Random;
 using Mirror;
-using Valve.VR.Extras;
 
 public class NetExperimentManager : NetworkBehaviour
 {
@@ -36,7 +31,9 @@ public class NetExperimentManager : NetworkBehaviour
        // Experiment tool/helper variables.
        private float _trialStartTime;
        private bool _experimentDone;
-       [SerializeField] [SyncVar] public int trialID = -1;
+       private bool _trialSynchronized;
+       private int _oldTrialID;
+       [SerializeField] [SyncVar(hook = nameof(OnTrialChange))] public int trialID = -1;
        [SerializeField] [SyncVar] private bool _leftResponseGiven;
        [SerializeField] [SyncVar] private bool _rightResponseGiven; 
        [SerializeField] [SyncVar] private bool _leftReady;
@@ -57,20 +54,8 @@ public class NetExperimentManager : NetworkBehaviour
 
        IEnumerator Start()
        {
-              // When joining the networked experiment, spawn both participants.
-              if (_experimentID == "Joint_GoNoGo")
-              {
-                     if (UIOptions.isHost)
-                     {
-                            _manager.StartHost();
-                            Debug.Log("Started as host.");
-                     }
-                     else
-                     {
-                            _manager.StartClient();
-                            Debug.Log("Started as client.");
-                     }
-              }
+              Debug.LogWarning(UIOptions.isHost);
+              Debug.LogWarning(UIOptions.experimentID);
               
               yield return new WaitUntil(() => _spawningDone);
               
@@ -85,11 +70,11 @@ public class NetExperimentManager : NetworkBehaviour
               _rightUI = GameObject.FindGameObjectWithTag("InstructionsUIRight");
 
               // Save name of experimental condition.
-              // _experimentID = UIOptions.experimentID;
+              _experimentID = UIOptions.experimentID;
 
-              // for debugging only, later: join exp3
-              UIOptions.isHost = false;
-              _experimentID = "Joint_GoNoGo";
+              // DEBUG
+              // UIOptions.isHost = false;
+              // _experimentID = "Joint_GoNoGo";
               
               // Show instructions to the participants, wait for them to begin the experiment via button click and disable instructions.
               yield return new WaitUntil(() => _leftReady && _rightReady);
@@ -99,16 +84,17 @@ public class NetExperimentManager : NetworkBehaviour
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
-              _experimentDone = true;
+              _experimentDone = false;
 
               // After finishing the experiment, (stop server and) return to the EntranceHall.
-              if (_experimentID == "Joint_GoNoGo" && _manager.isNetworkActive)
+              if (_manager.isNetworkActive)
               {
                      _manager.StopServer();
+                     Debug.LogWarning("Server stopped.");
               }
 
               UIOptions.experimentID = "EntranceHall";
-              SceneManager.LoadScene("EntranceHall");
+              SceneManager.LoadScene("EntranceHall", LoadSceneMode.Single);
        }
 
        // Coroutine for all experimental conditions.
@@ -127,8 +113,8 @@ public class NetExperimentManager : NetworkBehaviour
                             _rightResponseGiven = false;
                             
                             // Save the trial start time and select random trial.
-                            _trialStartTime = Time.time;
-                            StartTrial();
+                            //_trialStartTime = Time.time;
+                            StartCoroutine(StartTrial());
                             
                             // Wait for participant's response in Update().
                             yield return new WaitUntil(() => _leftResponseGiven || _rightResponseGiven);
@@ -179,15 +165,21 @@ public class NetExperimentManager : NetworkBehaviour
        }
 
        // StartTrial() randomly selects a trial.
-       private void StartTrial()
+       private IEnumerator StartTrial()
        {
+              _oldTrialID = trialID;
+              
               // Get a random integer, identifying the different trial cases.
               if (UIOptions.isHost)
               {
                      // Send command to server from host-client; server will synchronize trialID back to all clients.
                      CmdRandomTrial();
               }
+
+              yield return new WaitUntil(() => _trialSynchronized || trialID == _oldTrialID);
               Debug.LogWarning($"Synchronized trialID: {trialID}");
+              
+              _trialStartTime = Time.time;
               
               switch (trialID)
               {
@@ -220,6 +212,7 @@ public class NetExperimentManager : NetworkBehaviour
                             _correctResponse = "right";
                             break;
               }
+              _trialSynchronized = false;
        }
        
        // There are four possible trials (2 compatible, 2 incompatible).
@@ -265,6 +258,15 @@ public class NetExperimentManager : NetworkBehaviour
               }
        }
 
+       private void OnTrialChange(int oldID, int newID)
+       {
+              Debug.LogWarning("old trialID: " + trialID);
+              trialID = newID;
+              Debug.LogWarning("new trialID: " + trialID);
+              
+              _trialSynchronized = true;
+       }
+
        // Get random trial.
        [Command(ignoreAuthority = true)]
        private void CmdRandomTrial()
@@ -272,7 +274,7 @@ public class NetExperimentManager : NetworkBehaviour
               trialID = Random.Range(0, 4);
               Debug.LogWarning($"TrialID on host client: {trialID}");
        }
-       
+
        // Get left response.
        [Command(ignoreAuthority = true)]
        public void CmdLeftResponse()

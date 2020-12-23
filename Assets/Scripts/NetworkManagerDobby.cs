@@ -10,6 +10,24 @@ public class NetworkManagerDobby : NetworkManager
     private GameObject _instructionsRight;
     private NetExperimentManager _expManager;
 
+    public override void Start()
+    {
+        // When joining the networked experiment, spawn both participants.
+        if (UIOptions.experimentID == "Joint_GoNoGo")
+        {
+            if (UIOptions.isHost)
+            {
+                StartHost();
+                Debug.LogWarning("Started as host.");
+            }
+            else
+            {
+                StartClient();
+                Debug.LogWarning("Started as client.");
+            }
+        }
+    }
+
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
         // Spawn NetParticipant when client is joining the server (isReady is set to true).
@@ -31,7 +49,7 @@ public class NetworkManagerDobby : NetworkManager
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        // destroy instructions
+        // Destroy instructions when server is shut down.
         if (_instructionsLeft != null)
         {
             NetworkServer.Destroy(_instructionsLeft);
@@ -42,7 +60,7 @@ public class NetworkManagerDobby : NetworkManager
             NetworkServer.Destroy(_instructionsRight);
         }
 
-        // call base functionality (actually destroys the player)
+        // Call base functionality (actually destroys the player).
         base.OnServerDisconnect(conn);
     }
 }
