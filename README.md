@@ -14,3 +14,13 @@ The results of the experiments are saved in the "results.txt" in Assets/Results.
 
 ### References
 - Sebanz, N., Knoblich, G., & Prinz, W. (2003). Representing others' actions: just like one's own?. Cognition, 88(3), B11-B21.
+- Silvano Junior (2018). Creature: Cave Troll. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- Omni Studio (2018). Free Medieval Room. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- vis2k (2020). Mirror Networking Plugin for Unity. Asset from the Unity Asset Store. Downloaded Dec, 2020.
+- AmbiMesh (2020). Raw Wooden Furniture Free. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- Valve Corporation (2020). SteamVR Plugin. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- Broken Vector (2019). Ultimate Low Poly Dungeon. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- Ferocious Industries (2019). FREE Witchcraft and Wizardry Asset Pack. Asset from the Unity Asset Store. Downloaded Nov, 2020.
+- David Wigforss (2020). Dobby (Harry Potter). Asset from Sketchfab. Retrieved from https://sketchfab.com/3d-models/dobby-harry-potter-bb1fdf32c01a4a1ba51335797b4a4328.
+- Antwone2012 (2013). Rocking Chair. Asset from Turbosquid. Retrieved from https://www.turbosquid.com/3d-models/wood-rocking-chair-max-free/779387.
+- VeriorPies (2020). ParrelSync 1.4.1 Plugin for Unity. Retrieved from https://github.com/VeriorPies/ParrelSync/releases.
