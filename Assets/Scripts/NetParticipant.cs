@@ -2,6 +2,11 @@
 using UnityEngine;
 using Valve.VR;
 
+/*
+ * A lot of this code is used from a Unity forum thread: https://forum.unity.com/threads/multiplayer-with-steamvr.535321/
+ * (conversation between "csofranz" and "Giantbean").
+ */
+
 public class NetParticipant : NetworkBehaviour
 {
     // Helper variable for coordinating spawns and input.

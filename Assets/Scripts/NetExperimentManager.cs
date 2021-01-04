@@ -262,6 +262,9 @@ public class NetExperimentManager : NetworkBehaviour
        }
        
        // Method for binding and writing data to .csv file.
+       /*
+        * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
+        */
        private void AddRecord(string experimentID, float RT, string compatibility, string color, string irrelevantStimulus, string response, string correctResponse, bool correctness, string filepath)
        {
               try

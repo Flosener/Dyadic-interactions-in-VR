@@ -9,8 +9,6 @@ public class Participant : MonoBehaviour
     // Participant's movement and response input variables.
     #pragma warning disable 649
     [SerializeField] private SteamVR_Action_Vector2 _joystickMovement;
-    [SerializeField] private SteamVR_Action_Boolean _leftHandLeftResponse;
-    [SerializeField] private SteamVR_Action_Boolean _rightHandRightResponse;
     [SerializeField] private float _speed = 1f;
     #pragma warning restore 649
     
@@ -28,11 +26,11 @@ public class Participant : MonoBehaviour
         {
             // Randomize left or right spawn of participant.
             case "Individual_GoNoGo" when Random.Range(0, 2) == 0:
-                transform.position = new Vector3(-2, 0, -5);
+                transform.position = new Vector3(-1.5f, 0, -5);
                 leftSpawned = true;
                 break;
             case "Individual_GoNoGo":
-                transform.position = new Vector3(2, 0, -5);
+                transform.position = new Vector3(1.5f, 0, -5);
                 break;
             case "Individual_TwoChoice":
                 transform.position = new Vector3(0,0,-5);
@@ -55,6 +53,10 @@ public class Participant : MonoBehaviour
         }
     }
 
+    /*
+     * Movement function is mostly copied from Valem's YouTube video: https://www.youtube.com/watch?v=5C6zr4Q5AlA&t=735s&ab_channel=Valem.
+     */
+    
     private void Move()
     {
         // Checks whether there is actual input to get teleporting working with joystick movement.

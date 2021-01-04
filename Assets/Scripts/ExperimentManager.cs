@@ -4,9 +4,15 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using Valve.VR;
 
 public class ExperimentManager : MonoBehaviour
 {
+
+       // Participant input.
+       [SerializeField] private SteamVR_Action_Boolean _leftHandLeftResponse;
+       [SerializeField] private SteamVR_Action_Boolean _rightHandRightResponse;
+
        // Scene object/animation variables.
        private Material _hatColor;
        private Animator _leftDoorAnim;
@@ -78,7 +84,7 @@ public class ExperimentManager : MonoBehaviour
 
        private void Update()
        {
-              // DEBUG: Change input source back to controller.
+              // DEBUG: Change input source back to controller (_leftHandLeftResponse.state)
               
               // "X" button on left Oculus controller.
               if ((Input.GetKeyDown(KeyCode.F) && UIOptions.experimentID == "Individual_TwoChoice") || 
@@ -268,6 +274,9 @@ public class ExperimentManager : MonoBehaviour
        }
        
        // Method for binding and writing data to .csv file.
+       /*
+        * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
+        */
        private void AddRecord(string _experimentID, float _RT, string _compatibility, string _color, string _irrelevantStimulus, string _response, string _correctResponse, bool _correctness, string filepath)
        {
               try
