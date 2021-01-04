@@ -75,7 +75,7 @@ public class NetExperimentManager : NetworkBehaviour
               yield return new WaitUntil(() => _leftReady && _rightReady);
               
               // Start experiment.
-              StartCoroutine(Experiment(3f, 2, 5));
+              StartCoroutine(Experiment(3f, 4, 4));
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
@@ -198,6 +198,20 @@ public class NetExperimentManager : NetworkBehaviour
                             _irrelevantStimulus = "left";
                             _correctResponse = "right";
                             break;
+                     case 4:
+                            GreenNeutral();
+                            _compatibility = "neutral";
+                            _color = "green";
+                            _irrelevantStimulus = "NONE";
+                            _correctResponse = "left";
+                            break;
+                     case 5:
+                            RedNeutral();
+                            _compatibility = "neutral";
+                            _color = "red";
+                            _irrelevantStimulus = "NONE";
+                            _correctResponse = "right";
+                            break;
               }
               
               // After each trial, set condition flags to false again.
@@ -205,7 +219,7 @@ public class NetExperimentManager : NetworkBehaviour
               _sameTrial = false;
        }
        
-       // There are four possible trials (2 compatible, 2 incompatible).
+       // There are six possible trials (2 compatible, 2 incompatible, 2 neutral).
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
@@ -221,6 +235,12 @@ public class NetExperimentManager : NetworkBehaviour
               _rightLightAnim.Play("lightOn");
        }
        
+       void GreenNeutral()
+       {
+              _trialStartTime = Time.time;
+              _hatColor.SetColor("_Color",Color.green);
+       }
+       
        void RedCompatible()
        {
               _trialStartTime = Time.time;
@@ -233,6 +253,12 @@ public class NetExperimentManager : NetworkBehaviour
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
+       }
+       
+       void RedNeutral()
+       {
+              _trialStartTime = Time.time;
+              _hatColor.SetColor("_Color",Color.red);
        }
        
        // Method for binding and writing data to .csv file.
@@ -264,7 +290,7 @@ public class NetExperimentManager : NetworkBehaviour
        private void CmdRandomTrial()
        {
               _oldTrialID = trialID;
-              trialID = Random.Range(0, 4);
+              trialID = Random.Range(0, 6);
               
               // Synchronized variable does not update when old and new trial are the same, such that animation is not played on client.
               if (trialID == _oldTrialID)

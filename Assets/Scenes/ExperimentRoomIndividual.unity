@@ -19513,11 +19513,11 @@ MonoBehaviour:
   m_Text: 'Welcome to the experiment!
 
     Look at the wizard''s hat between the
-    two doors. If it turns GREEN, press the "X" button on your left controller. If
+    two doors. If it turns GREEN, press the "B" button on your left controller. If
     it turns red, do nothing.
 
 
-    Click "X" to start the experiment.'
+    Click "B" to start the experiment.'
 --- !u!1 &3991572094825680742
 GameObject:
   m_ObjectHideFlags: 0
@@ -19578,7 +19578,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "Welcome to the experiment!\nLook at the wizard's hat between the two doors.
     If it turns GREEN, press the \"X\" button on your left controller. If it turns
-    RED, press the \"A\" button on your right controller. \n\nClick \"A\" or \"X\"
+    RED, press the \"A\" button on your right controller. \n\nClick \"X\" or \"A\"
     to start the experiment."
 --- !u!222 &6149736227986296794
 CanvasRenderer:

@@ -24,9 +24,9 @@ public class NetParticipant : NetworkBehaviour
     #pragma warning restore 649
  
     // Objects tracked for server synchronization
-    private SteamVR_TrackedObject trackedObjHead;
-    private SteamVR_TrackedObject trackedObjRight;
-    private SteamVR_TrackedObject trackedObjLeft;
+    private SteamVR_TrackedObject _trackedObjHead;
+    private SteamVR_TrackedObject _trackedObjRight;
+    private SteamVR_TrackedObject _trackedObjLeft;
     
     public override void OnStartLocalPlayer()
     {
@@ -55,8 +55,8 @@ public class NetParticipant : NetworkBehaviour
             _localLeftHand = _localPlayer.transform.Find("LeftHand").gameObject;
             _localRightHand = _localPlayer.transform.Find("RightHand").gameObject;
  
-            trackedObjRight = _localRightHand.GetComponent<SteamVR_TrackedObject>();
-            trackedObjLeft = _localLeftHand.GetComponent<SteamVR_TrackedObject>(); 
+            _trackedObjRight = _localRightHand.GetComponent<SteamVR_TrackedObject>();
+            _trackedObjLeft = _localLeftHand.GetComponent<SteamVR_TrackedObject>(); 
         }
     }
     
@@ -98,14 +98,16 @@ public class NetParticipant : NetworkBehaviour
         // DEBUG: Change back input source.
         
         // "B" button on right Oculus controller.
-        if (Input.GetKeyDown(KeyCode.O) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1))
+        // If host gives left response on green trial get RT and send response to server.
+        if (Input.GetKeyDown(KeyCode.F) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1 || _expManager.trialID == 4))
         {
             _expManager.CmdReactionTime();
             _expManager.CmdLeftResponse();
             Debug.Log("Left response given");
         }
         // "A" button on right Oculus controller.
-        else if (Input.GetKeyDown(KeyCode.K) && !UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 2 || _expManager.trialID == 3))
+        // If client gives right response on red trial get RT and send response to server.
+        else if (Input.GetKeyDown(KeyCode.J) && !UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 2 || _expManager.trialID == 3 || _expManager.trialID == 5))
         {
             _expManager.CmdReactionTime();
             _expManager.CmdRightResponse();

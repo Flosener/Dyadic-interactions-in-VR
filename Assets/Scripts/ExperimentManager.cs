@@ -66,7 +66,7 @@ public class ExperimentManager : MonoBehaviour
               yield return new WaitUntil(() => _beginExperiment);
 
               // Start experiment.
-              StartCoroutine(Experiment(3f, 2, 5));
+              StartCoroutine(Experiment(3f, 4, 4));
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
@@ -81,8 +81,8 @@ public class ExperimentManager : MonoBehaviour
               // DEBUG: Change input source back to controller.
               
               // "X" button on left Oculus controller.
-              if ((Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_TwoChoice") || 
-                  (Input.GetKeyDown(KeyCode.O) && UIOptions.experimentID == "Individual_GoNoGo" && Participant.leftSpawned))
+              if ((Input.GetKeyDown(KeyCode.F) && UIOptions.experimentID == "Individual_TwoChoice") || 
+                  (Input.GetKeyDown(KeyCode.F) && UIOptions.experimentID == "Individual_GoNoGo" && Participant.leftSpawned))
               {
                      // Take reaction time directly after response.
                      _RT = Time.time - _trialStartTime;
@@ -90,8 +90,8 @@ public class ExperimentManager : MonoBehaviour
                      _leftReady = true;
               }
               // "A" button on right Oculus controller.
-              else if ((Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_TwoChoice") || 
-                       (Input.GetKeyDown(KeyCode.K) && UIOptions.experimentID == "Individual_GoNoGo" && !Participant.leftSpawned))
+              else if ((Input.GetKeyDown(KeyCode.J) && UIOptions.experimentID == "Individual_TwoChoice") || 
+                       (Input.GetKeyDown(KeyCode.J) && UIOptions.experimentID == "Individual_GoNoGo" && !Participant.leftSpawned))
               {
                      _RT = Time.time - _trialStartTime;
                      _rightResponseGiven = true;
@@ -120,11 +120,11 @@ public class ExperimentManager : MonoBehaviour
 
                             // If we are in the individual Go-NoGo task, skip unnecessary trials.
                             if (UIOptions.experimentID == "Individual_GoNoGo" &&
-                                ((Participant.leftSpawned && (_trialID == 2 || _trialID == 3)) ||
-                                 (!Participant.leftSpawned && (_trialID == 0 || _trialID == 1))))
+                                ((Participant.leftSpawned && (_trialID == 2 || _trialID == 3 || _trialID == 5)) ||
+                                 (!Participant.leftSpawned && (_trialID == 0 || _trialID == 1 || _trialID == 4))))
                             {
                                    yield return new WaitForSeconds(1f);
-                                   _response = "none";
+                                   _response = "NONE";
                                    _skipTrial = true;
                             }
                             
@@ -177,7 +177,7 @@ public class ExperimentManager : MonoBehaviour
        private void StartTrial()
        {
               // Get a random integer, identifying the different trial cases.
-              _trialID = Random.Range(0, 4);
+              _trialID = Random.Range(0, 6);
               switch (_trialID)
               {
                      case 0:
@@ -208,10 +208,24 @@ public class ExperimentManager : MonoBehaviour
                             _irrelevantStimulus = "left";
                             _correctResponse = "right";
                             break;
+                     case 4:
+                            GreenNeutral();
+                            _compatibility = "neutral";
+                            _color = "green";
+                            _irrelevantStimulus = "NONE";
+                            _correctResponse = "left";
+                            break;
+                     case 5:
+                            RedNeutral();
+                            _compatibility = "neutral";
+                            _color = "red";
+                            _irrelevantStimulus = "NONE";
+                            _correctResponse = "right";
+                            break;
               }
        }
        
-       // There are four possible trials (2 compatible, 2 incompatible).
+       // There are six possible trials (2 compatible, 2 incompatible, 2 neutral).
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
@@ -227,6 +241,12 @@ public class ExperimentManager : MonoBehaviour
               _rightLightAnim.Play("lightOn");
        }
        
+       void GreenNeutral()
+       {
+              _trialStartTime = Time.time;
+              _hatColor.SetColor("_Color",Color.green);
+       }
+       
        void RedCompatible()
        {
               _trialStartTime = Time.time;
@@ -239,6 +259,12 @@ public class ExperimentManager : MonoBehaviour
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
+       }
+       
+       void RedNeutral()
+       {
+              _trialStartTime = Time.time;
+              _hatColor.SetColor("_Color",Color.red);
        }
        
        // Method for binding and writing data to .csv file.
