@@ -100,7 +100,7 @@ public class NetParticipant : NetworkBehaviour
 
     private void GetResponse()
     {
-        // DEBUG: Change back input source.
+        // DEBUG: Change back input source (_leftHandLeftResponse.state).
         
         // "B" button on right Oculus controller.
         // If host gives left response on green trial get RT and send response to server.
