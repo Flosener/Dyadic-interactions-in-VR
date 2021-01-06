@@ -7,7 +7,7 @@ This is the repository for the Unity project that builds the basis for a replica
 <br>
 To use this application, start a builded version (Builds/HarryPotter) on two PC's each, both with a VR headset and controllers connected. You also need SteamVR. The current version supports and works properly with the Oculus Rift, though for using other headsets that are supported by SteamVR you only have to re-define the actions via SteamVR Input.
 After starting both applications you can individually do experiment 1 and 2. <br>
-[!] For joining the (networked) experiment 3, one participant has to join as a host, the other as a client after the host (the order is important!). The client has to use the host's IP4 adress to join. Therefore you cannot use the builded applications right away, but have to build with the corresponding IP4 put into the network address slot of the NetworkManager in the JointExperimentRoom scene. To find the IP4, type "ipconfig" into the command line of the host. <br>
+[!] For joining the (networked) experiment 3, one participant has to join as a host, the other as a client after the host (the order is important!). The client has to use the host's IP4 adress to join. To find the IP4, type "ipconfig" into the command line of the host (Windows) or search in the system preferences under network settings (Mac). <br>
 The results of the experiments are saved in the "results.txt" in Assets/Results.
 
 ![entranceHall](https://user-images.githubusercontent.com/57441991/101847194-f2b16080-3b52-11eb-89d9-faf2b4c43164.PNG)
