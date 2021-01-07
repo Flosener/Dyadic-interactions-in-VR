@@ -19,12 +19,13 @@ public class NetExperimentManager : NetworkBehaviour
        private GameObject _rightUI;
 
        // Data variables.
+       [SyncVar] private int _participantID;
        private string _experimentID;
        [SyncVar] private float _RT;
        private string _compatibility;
        private string _color;
        private string _irrelevantStimulus;
-       private string _response;
+       [SyncVar] private string _response;
        private string _correctResponse;
        private bool _correctness;
 
@@ -33,6 +34,7 @@ public class NetExperimentManager : NetworkBehaviour
        private bool _experimentDone;
        private bool _trialSynchronized;
        private int _oldTrialID;
+       [SyncVar] public bool inTrial;
        [SyncVar] private bool _sameTrial;
        [SerializeField] [SyncVar(hook = nameof(OnTrialChange))] public int trialID = -1;
        [SerializeField] [SyncVar] private bool _leftResponseGiven;
@@ -118,13 +120,11 @@ public class NetExperimentManager : NetworkBehaviour
                             {
                                    _leftDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
-                                   _response = "left";
                             }
                             else if (_rightResponseGiven)
                             {
                                    _rightDoorAnim.Play("doorAnim");
                                    SoundManager.PlaySound("doorOpen");
-                                   _response = "right";
                             }
 
                             // Check for trial type and play corresponding ending-light animation.
@@ -146,7 +146,7 @@ public class NetExperimentManager : NetworkBehaviour
                             _correctness = _response == _correctResponse;
                             
                             // Add all values to results.
-                            AddRecord(UIOptions.isHost ? 1 : 2,i+1, j+1, _experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
+                            AddRecord(_participantID,i+1, j+1, _experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
                      }
               }
               // Back to Start() coroutine if all trials in all blocks have been completed.
@@ -221,6 +221,7 @@ public class NetExperimentManager : NetworkBehaviour
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
@@ -228,6 +229,7 @@ public class NetExperimentManager : NetworkBehaviour
 
        void GreenIncompatible()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _rightLightAnim.Play("lightOn");
@@ -235,6 +237,7 @@ public class NetExperimentManager : NetworkBehaviour
        
        void GreenNeutral()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
@@ -243,6 +246,7 @@ public class NetExperimentManager : NetworkBehaviour
        
        void RedCompatible()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _rightLightAnim.Play("lightOn");
@@ -250,6 +254,7 @@ public class NetExperimentManager : NetworkBehaviour
 
        void RedIncompatible()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
@@ -257,6 +262,7 @@ public class NetExperimentManager : NetworkBehaviour
        
        void RedNeutral()
        {
+              inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
@@ -264,9 +270,7 @@ public class NetExperimentManager : NetworkBehaviour
        }
        
        // Method for binding and writing data to .csv file.
-       /*
-        * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
-        */
+       // Origin: Max O'Didily, https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
        private void AddRecord(int participantID, int blockCount, int trialCount, string experimentID, float RT, string compatibility, string color, string irrelevantStimulus, string response, string correctResponse, bool correctness, string filepath)
        {
               try
@@ -313,28 +317,34 @@ public class NetExperimentManager : NetworkBehaviour
 
        // Get left response.
        [Command(ignoreAuthority = true)]
-       public void CmdLeftResponse()
+       public void CmdResponse()
        {
-              // Destroy left instructions, when participant gives input.
-              if (_leftUI != null)
+              // Set inTrial bool to false such that participants cannot respond in between trials.
+              inTrial = false;
+              
+              if (UIOptions.isHost)
               {
-                     NetworkServer.Destroy(_leftUI);
-                     _leftReady = true;
+                     // Destroy left instructions, when participant gives input.
+                     if (_leftUI != null)
+                     {
+                            NetworkServer.Destroy(_leftUI);
+                            _leftReady = true;
+                     }
+                     _leftResponseGiven = true;
+                     _response = "left";
+                     _participantID = 1;
               }
-              _leftResponseGiven = true;
-       }
-
-       // Get right response.
-       [Command(ignoreAuthority = true)]
-       public void CmdRightResponse()
-       {
-              // Destroy right instructions, when participant gives input.
-              if (_rightUI != null)
+              else
               {
-                     NetworkServer.Destroy(_rightUI);
-                     _rightReady = true;
+                     if (_rightUI != null)
+                     {
+                            NetworkServer.Destroy(_rightUI);
+                            _rightReady = true;
+                     }
+                     _rightResponseGiven = true;
+                     _response = "right";
+                     _participantID = 2;
               }
-              _rightResponseGiven = true;
        }
 
        // Called on server (NetworkManagerDobby): Set spawning done flag to true.
