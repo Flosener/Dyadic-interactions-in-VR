@@ -53,10 +53,7 @@ public class Participant : MonoBehaviour
         }
     }
 
-    /*
-     * Movement function is mostly copied from Valem's YouTube video: https://www.youtube.com/watch?v=5C6zr4Q5AlA&t=735s&ab_channel=Valem.
-     */
-    
+    // Origin: Valem, https://www.youtube.com/watch?v=5C6zr4Q5AlA&t=735s&ab_channel=Valem.
     private void Move()
     {
         // Checks whether there is actual input to get teleporting working with joystick movement.

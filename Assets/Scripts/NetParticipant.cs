@@ -10,8 +10,10 @@ using Valve.VR;
 public class NetParticipant : NetworkBehaviour
 {
     // Helper variable for coordinating spawns and input.
+    #pragma warning disable 649
     [SerializeField] private SteamVR_Action_Boolean _rightHandRightResponse;
     [SerializeField] private SteamVR_Action_Boolean _rightHandLeftResponse;
+    #pragma warning restore 649
     private NetExperimentManager _expManager;
  
     // Source GameObjects head + hands of local player.
@@ -100,23 +102,20 @@ public class NetParticipant : NetworkBehaviour
 
     private void GetResponse()
     {
-        // DEBUG: Change back input source (_leftHandLeftResponse.state).
-        
         // "B" button on right Oculus controller.
-        // If host gives left response on green trial get RT and send response to server.
-        if (Input.GetKeyDown(KeyCode.F) && UIOptions.isHost && _expManager.inTrial)
+        // If host gives left response get RT and send response to server.
+        if (_rightHandLeftResponse.state && UIOptions.isHost && _expManager.inTrial)
         {
             _expManager.CmdReactionTime();
-            _expManager.CmdResponse();
-            Debug.Log("Left response given");
+            _expManager.CmdLeftResponse();
         }
+        
         // "A" button on right Oculus controller.
-        // If client gives right response on red trial get RT and send response to server.
-        else if (Input.GetKeyDown(KeyCode.J) && !UIOptions.isHost && _expManager.inTrial)
+        // If client gives right response get RT and send response to server.
+        else if (_rightHandRightResponse.state && !UIOptions.isHost && _expManager.inTrial)
         {
             _expManager.CmdReactionTime();
-            _expManager.CmdResponse();
-            Debug.Log("Right response given");
+            _expManager.CmdRightResponse();
         }
     }
     

@@ -54,6 +54,7 @@ public class NetworkManagerDobby : NetworkManager
         // Spawn UI and tell ExperimentManager that spawning is done.
         if (numPlayers == 2)
         {
+            _ipField.SetActive(false);
             _instructionsLeft = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUILeft"));
             NetworkServer.Spawn(_instructionsLeft);
             _instructionsRight = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "InstructionsUIRight"));
@@ -91,6 +92,7 @@ public class NetworkManagerDobby : NetworkManager
         networkAddress = _inputField.transform.Find("Text").GetComponent<Text>().text;
         StartClient();
         Debug.Log("Started as client.");
+        
         _inputField.SetActive(false);
         _joinButton.SetActive(false);
     }

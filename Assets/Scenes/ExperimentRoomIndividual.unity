@@ -19135,8 +19135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e3c59d27e913634584f3a5d66e8c6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _RT: 0
-  _trialStartTime: 0
+  _leftHandLeftResponse:
+    actionPath: /actions/default/in/leftHandleftResponse
+    needsReinit: 0
+  _rightHandRightResponse:
+    actionPath: /actions/default/in/rightHandrightResponse
+    needsReinit: 0
 --- !u!1 &1023210939825391808
 GameObject:
   m_ObjectHideFlags: 0

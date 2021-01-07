@@ -10,8 +10,10 @@ public class ExperimentManager : MonoBehaviour
 {
 
        // Participant input.
+       #pragma warning disable 649
        [SerializeField] private SteamVR_Action_Boolean _leftHandLeftResponse;
        [SerializeField] private SteamVR_Action_Boolean _rightHandRightResponse;
+       #pragma warning restore 649
 
        // Scene object/animation variables.
        private Material _hatColor;
@@ -23,7 +25,7 @@ public class ExperimentManager : MonoBehaviour
 
        // Data variables.
        private string _experimentID;
-       public float _RT;
+       private float _RT;
        private string _compatibility;
        private string _color;
        private string _irrelevantStimulus;
@@ -32,15 +34,16 @@ public class ExperimentManager : MonoBehaviour
        private bool _correctness;
 
        // Experiment tool/helper variables.
-       public float _trialStartTime;
+       private float _trialStartTime;
        private bool _beginExperiment;
        private bool _experimentDone;
        private bool _skipTrial;
-       private int _trialID;
+       private int _trialID = -1;
        private bool _leftResponseGiven;
        private bool _rightResponseGiven;
        private bool _leftReady;
        private bool _rightReady;
+       private bool _inTrial = true;
 
        /*
         General lifecycle:
@@ -72,7 +75,7 @@ public class ExperimentManager : MonoBehaviour
               yield return new WaitUntil(() => _beginExperiment);
 
               // Start experiment.
-              StartCoroutine(Experiment(3f, 4, 4));
+              StartCoroutine(Experiment(3f, 4, 126));
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
@@ -84,31 +87,46 @@ public class ExperimentManager : MonoBehaviour
 
        private void Update()
        {
-              // DEBUG: Change input source back to controller (_leftHandLeftResponse.state)
-              
+              GetResponse();
+       }
+
+       // Method for getting participant's response.
+       private void GetResponse()
+       {
               // "X" button on left Oculus controller.
-              if (Input.GetKeyDown(KeyCode.F) && Participant.leftSpawned)
+              if ((_leftHandLeftResponse.state && _experimentID == "Individual_TwoChoice" && _inTrial) || 
+                  (_leftHandLeftResponse.state && _experimentID == "Individual_GoNoGo" && Participant.leftSpawned && _inTrial))
               {
                      // Take reaction time directly after response.
                      _RT = Time.time - _trialStartTime;
+                     _response = "left";
                      _leftResponseGiven = true;
                      _leftReady = true;
-                     
-                     // Animations
-                     _leftDoorAnim.Play("doorAnim");
-                     SoundManager.PlaySound("doorOpen");
-                     _response = "left";
+                     _inTrial = false;
+
+                     if (_trialID != -1)
+                     {
+                            // Door opening animation on response.
+                            _leftDoorAnim.Play("doorAnim");
+                            SoundManager.PlaySound("doorOpen");
+                     }
               }
+              
               // "A" button on right Oculus controller.
-              else if (Input.GetKeyDown(KeyCode.J) && !Participant.leftSpawned)
+              else if ((_rightHandRightResponse.state && _experimentID == "Individual_TwoChoice" && _inTrial) || 
+                       (_rightHandRightResponse.state && _experimentID == "Individual_GoNoGo" && !Participant.leftSpawned && _inTrial))
               {
                      _RT = Time.time - _trialStartTime;
+                     _response = "right";
                      _rightResponseGiven = true;
                      _rightReady = true;
-                     
-                     _rightDoorAnim.Play("doorAnim");
-                     SoundManager.PlaySound("doorOpen");
-                     _response = "right";
+                     _inTrial = false;
+
+                     if (_trialID != -1)
+                     {
+                            _rightDoorAnim.Play("doorAnim");
+                            SoundManager.PlaySound("doorOpen");
+                     }
               }
        }
 
@@ -139,7 +157,7 @@ public class ExperimentManager : MonoBehaviour
                                    yield return new WaitForSeconds(2f);
                                    _correctResponse = "NONE";
 
-                                   // If the participant did not respond during nogo trial, response is none.
+                                   // If the participant did not respond during NoGo trial (for 2s), response is none.
                                    if ((_leftResponseGiven || _rightResponseGiven) == false)
                                    {
                                           _skipTrial = true;
@@ -246,6 +264,7 @@ public class ExperimentManager : MonoBehaviour
        // Correct responses: Green -> leftButton; Red -> rightButton
        void GreenCompatible()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
@@ -253,6 +272,7 @@ public class ExperimentManager : MonoBehaviour
 
        void GreenIncompatible()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _rightLightAnim.Play("lightOn");
@@ -260,6 +280,7 @@ public class ExperimentManager : MonoBehaviour
        
        void GreenNeutral()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
               _leftLightAnim.Play("lightOn");
@@ -268,6 +289,7 @@ public class ExperimentManager : MonoBehaviour
        
        void RedCompatible()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _rightLightAnim.Play("lightOn");
@@ -275,6 +297,7 @@ public class ExperimentManager : MonoBehaviour
 
        void RedIncompatible()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
@@ -282,6 +305,7 @@ public class ExperimentManager : MonoBehaviour
        
        void RedNeutral()
        {
+              _inTrial = true;
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
               _leftLightAnim.Play("lightOn");
@@ -289,9 +313,7 @@ public class ExperimentManager : MonoBehaviour
        }
        
        // Method for binding and writing data to .csv file.
-       /*
-        * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
-        */
+       // Origin: Max O'Didily, https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
        private void AddRecord(int participantID, int blockCount, int trialCount, string _experimentID, float _RT, string _compatibility, string _color, string _irrelevantStimulus, string _response, string _correctResponse, bool _correctness, string filepath)
        {
               try

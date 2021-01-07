@@ -34,11 +34,11 @@ public class NetExperimentManager : NetworkBehaviour
        private bool _experimentDone;
        private bool _trialSynchronized;
        private int _oldTrialID;
-       [SyncVar] public bool inTrial;
+       [SyncVar] public bool inTrial = true;
        [SyncVar] private bool _sameTrial;
-       [SerializeField] [SyncVar(hook = nameof(OnTrialChange))] public int trialID = -1;
-       [SerializeField] [SyncVar] private bool _leftResponseGiven;
-       [SerializeField] [SyncVar] private bool _rightResponseGiven; 
+       [SyncVar(hook = nameof(OnTrialChange))] public int trialID = -1;
+       [SyncVar] private bool _leftResponseGiven;
+       [SyncVar] private bool _rightResponseGiven; 
        [SyncVar] private bool _leftReady;
        [SyncVar] private bool _rightReady;
        [SyncVar] private bool _spawningDone;
@@ -47,7 +47,7 @@ public class NetExperimentManager : NetworkBehaviour
         General lifecycle:
         - Start Experiment with coroutine Experiment().
         - Get random trial with StartTrial() (+ track time begin).
-        - Wait for response in Update().
+        - Wait for response in Update() of NetParticipant.
         - Save response times and other trial-specific data.
         - Wait for animations to end (in-between trials).
         - Next trial starts ...
@@ -77,7 +77,7 @@ public class NetExperimentManager : NetworkBehaviour
               yield return new WaitUntil(() => _leftReady && _rightReady);
               
               // Start experiment.
-              StartCoroutine(Experiment(3f, 4, 4));
+              StartCoroutine(Experiment(3f, 4, 126));
               yield return new WaitUntil(() => _experimentDone);
               _hatColor.SetColor("_Color", Color.white);
               yield return new WaitForSeconds(3f);
@@ -315,36 +315,48 @@ public class NetExperimentManager : NetworkBehaviour
               _RT = Time.time - _trialStartTime;
        }
 
-       // Get left response.
+       // Get left response from participant.
        [Command(ignoreAuthority = true)]
-       public void CmdResponse()
+       public void CmdLeftResponse()
        {
-              // Set inTrial bool to false such that participants cannot respond in between trials.
-              inTrial = false;
+              // Destroy left instructions, when participant gives input.
+              if (_leftUI != null)
+              { 
+                     NetworkServer.Destroy(_leftUI); 
+                     _leftReady = true;
+              }
               
-              if (UIOptions.isHost)
+              // Set inTrial bool to false such that participants cannot respond in between trials.
+              if (trialID != -1)
               {
-                     // Destroy left instructions, when participant gives input.
-                     if (_leftUI != null)
-                     {
-                            NetworkServer.Destroy(_leftUI);
-                            _leftReady = true;
-                     }
-                     _leftResponseGiven = true;
-                     _response = "left";
-                     _participantID = 1;
+                     inTrial = false;
               }
-              else
+              
+              _leftResponseGiven = true;
+              _response = "left";
+              _participantID = 1;
+       }
+       
+       // Get right response from participant.
+       [Command(ignoreAuthority = true)]
+       public void CmdRightResponse()
+       {
+              // Destroy instructions when participant is ready.
+              if (_rightUI != null)
               {
-                     if (_rightUI != null)
-                     {
-                            NetworkServer.Destroy(_rightUI);
-                            _rightReady = true;
-                     }
-                     _rightResponseGiven = true;
-                     _response = "right";
-                     _participantID = 2;
+                     NetworkServer.Destroy(_rightUI);
+                     _rightReady = true;
               }
+              
+              // Set inTrial bool to false such that participants cannot respond in between trials.
+              if (trialID != -1)
+              {
+                     inTrial = false;
+              }
+              
+              _rightResponseGiven = true;
+              _response = "right";
+              _participantID = 2;
        }
 
        // Called on server (NetworkManagerDobby): Set spawning done flag to true.
