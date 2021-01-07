@@ -104,7 +104,7 @@ public class NetParticipant : NetworkBehaviour
         
         // "B" button on right Oculus controller.
         // If host gives left response on green trial get RT and send response to server.
-        if (Input.GetKeyDown(KeyCode.F) && UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 0 || _expManager.trialID == 1 || _expManager.trialID == 4))
+        if (Input.GetKeyDown(KeyCode.F) && UIOptions.isHost)
         {
             _expManager.CmdReactionTime();
             _expManager.CmdLeftResponse();
@@ -112,7 +112,7 @@ public class NetParticipant : NetworkBehaviour
         }
         // "A" button on right Oculus controller.
         // If client gives right response on red trial get RT and send response to server.
-        else if (Input.GetKeyDown(KeyCode.J) && !UIOptions.isHost && (_expManager.trialID == -1 || _expManager.trialID == 2 || _expManager.trialID == 3 || _expManager.trialID == 5))
+        else if (Input.GetKeyDown(KeyCode.J) && !UIOptions.isHost)
         {
             _expManager.CmdReactionTime();
             _expManager.CmdRightResponse();

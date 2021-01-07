@@ -130,17 +130,15 @@ public class NetExperimentManager : NetworkBehaviour
                             // Check for trial type and play corresponding ending-light animation.
                             switch (trialID)
                             {
-                                   case 0:
+                                   case 0 : case 3:
                                           _leftLightAnim.Play("doorGloom");
                                           break;
-                                   case 1:
+                                   case 1: case 2:
                                           _rightLightAnim.Play("doorGloom");
                                           break;
-                                   case 2:
-                                          _rightLightAnim.Play("doorGloom");
-                                          break;
-                                   case 3:
+                                   case 4: case 5:
                                           _leftLightAnim.Play("doorGloom");
+                                          _rightLightAnim.Play("doorGloom");
                                           break;
                             }
 
@@ -148,7 +146,7 @@ public class NetExperimentManager : NetworkBehaviour
                             _correctness = _response == _correctResponse;
                             
                             // Add all values to results.
-                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
+                            AddRecord(UIOptions.isHost ? 1 : 2,i+1, j+1, _experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
                      }
               }
               // Back to Start() coroutine if all trials in all blocks have been completed.
@@ -239,6 +237,8 @@ public class NetExperimentManager : NetworkBehaviour
        {
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
+              _leftLightAnim.Play("lightOn");
+              _rightLightAnim.Play("lightOn");
        }
        
        void RedCompatible()
@@ -259,20 +259,22 @@ public class NetExperimentManager : NetworkBehaviour
        {
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
+              _leftLightAnim.Play("lightOn");
+              _rightLightAnim.Play("lightOn");
        }
        
        // Method for binding and writing data to .csv file.
        /*
         * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
         */
-       private void AddRecord(string experimentID, float RT, string compatibility, string color, string irrelevantStimulus, string response, string correctResponse, bool correctness, string filepath)
+       private void AddRecord(int participantID, int blockCount, int trialCount, string experimentID, float RT, string compatibility, string color, string irrelevantStimulus, string response, string correctResponse, bool correctness, string filepath)
        {
               try
               {
                      // Instantiate StreamWriter object and write line to file including all recorded variables.
                      using (StreamWriter file = new StreamWriter(@filepath, true))
                      {
-                            file.WriteLine(experimentID + "," + RT + "," + compatibility + "," + color + "," + irrelevantStimulus + "," + response + "," + correctResponse + "," + correctness);
+                            file.WriteLine(participantID + "," + blockCount + "," + trialCount + "," + experimentID + "," + RT + "," + compatibility + "," + color + "," + irrelevantStimulus + "," + response + "," + correctResponse + "," + correctness);
                      }
               }
               catch (Exception ex)

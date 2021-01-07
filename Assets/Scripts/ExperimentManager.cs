@@ -87,21 +87,28 @@ public class ExperimentManager : MonoBehaviour
               // DEBUG: Change input source back to controller (_leftHandLeftResponse.state)
               
               // "X" button on left Oculus controller.
-              if ((Input.GetKeyDown(KeyCode.F) && UIOptions.experimentID == "Individual_TwoChoice") || 
-                  (Input.GetKeyDown(KeyCode.F) && UIOptions.experimentID == "Individual_GoNoGo" && Participant.leftSpawned))
+              if (Input.GetKeyDown(KeyCode.F) && Participant.leftSpawned)
               {
                      // Take reaction time directly after response.
                      _RT = Time.time - _trialStartTime;
                      _leftResponseGiven = true;
                      _leftReady = true;
+                     
+                     // Animations
+                     _leftDoorAnim.Play("doorAnim");
+                     SoundManager.PlaySound("doorOpen");
+                     _response = "left";
               }
               // "A" button on right Oculus controller.
-              else if ((Input.GetKeyDown(KeyCode.J) && UIOptions.experimentID == "Individual_TwoChoice") || 
-                       (Input.GetKeyDown(KeyCode.J) && UIOptions.experimentID == "Individual_GoNoGo" && !Participant.leftSpawned))
+              else if (Input.GetKeyDown(KeyCode.J) && !Participant.leftSpawned)
               {
                      _RT = Time.time - _trialStartTime;
                      _rightResponseGiven = true;
                      _rightReady = true;
+                     
+                     _rightDoorAnim.Play("doorAnim");
+                     SoundManager.PlaySound("doorOpen");
+                     _response = "right";
               }
        }
 
@@ -124,47 +131,51 @@ public class ExperimentManager : MonoBehaviour
                             // Select random trial.
                             StartTrial();
 
-                            // If we are in the individual Go-NoGo task, skip unnecessary trials.
+                            // If we are in the individual Go-NoGo task, skip unnecessary trials after two seconds.
                             if (UIOptions.experimentID == "Individual_GoNoGo" &&
                                 ((Participant.leftSpawned && (_trialID == 2 || _trialID == 3 || _trialID == 5)) ||
                                  (!Participant.leftSpawned && (_trialID == 0 || _trialID == 1 || _trialID == 4))))
                             {
-                                   yield return new WaitForSeconds(1f);
-                                   _response = "NONE";
-                                   _skipTrial = true;
+                                   yield return new WaitForSeconds(2f);
+                                   _correctResponse = "NONE";
+
+                                   // If the participant did not respond during nogo trial, response is none.
+                                   if ((_leftResponseGiven || _rightResponseGiven) == false)
+                                   {
+                                          _skipTrial = true;
+                                          _RT = Time.time - _trialStartTime;
+                                          _response = "NONE";
+
+                                          // Animation for automatic response.
+                                          switch (_trialID)
+                                          {
+                                                 case 2 : case 3: case 5:
+                                                        _rightDoorAnim.Play("doorAnim");
+                                                        SoundManager.PlaySound("doorOpen");
+                                                        break;
+                                                 case 0: case 1: case 4:
+                                                        _leftDoorAnim.Play("doorAnim");
+                                                        SoundManager.PlaySound("doorOpen");
+                                                        break;
+                                          }
+                                   }
                             }
                             
                             // Wait for participant's response in Update().
                             yield return new WaitUntil(() => _leftResponseGiven || _rightResponseGiven || _skipTrial);
 
-                            // Check given response and play corresponding open-door animation.
-                            if (_leftResponseGiven && !_skipTrial)
-                            {
-                                   _leftDoorAnim.Play("doorAnim");
-                                   SoundManager.PlaySound("doorOpen");
-                                   _response = "left";
-                            }
-                            else if (_rightResponseGiven && !_skipTrial)
-                            {
-                                   _rightDoorAnim.Play("doorAnim");
-                                   SoundManager.PlaySound("doorOpen");
-                                   _response = "right";
-                            }
-
                             // Check for trial type and play corresponding ending-light animation.
                             switch (_trialID)
                             {
-                                   case 0:
+                                   case 0 : case 3:
                                           _leftLightAnim.Play("doorGloom");
                                           break;
-                                   case 1:
+                                   case 1: case 2:
                                           _rightLightAnim.Play("doorGloom");
                                           break;
-                                   case 2:
-                                          _rightLightAnim.Play("doorGloom");
-                                          break;
-                                   case 3:
+                                   case 4: case 5:
                                           _leftLightAnim.Play("doorGloom");
+                                          _rightLightAnim.Play("doorGloom");
                                           break;
                             }
 
@@ -172,7 +183,7 @@ public class ExperimentManager : MonoBehaviour
                             _correctness = _response == _correctResponse;
                             
                             // Add all values to results.
-                            AddRecord(_experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
+                            AddRecord(0, i+1, j+1, _experimentID, _RT, _compatibility, _color, _irrelevantStimulus, _response, _correctResponse, _correctness, "Assets/Results/results.txt");
                      }
               }
               // Back to Start() coroutine if all trials in all blocks have been completed.
@@ -251,6 +262,8 @@ public class ExperimentManager : MonoBehaviour
        {
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.green);
+              _leftLightAnim.Play("lightOn");
+              _rightLightAnim.Play("lightOn");
        }
        
        void RedCompatible()
@@ -271,20 +284,22 @@ public class ExperimentManager : MonoBehaviour
        {
               _trialStartTime = Time.time;
               _hatColor.SetColor("_Color",Color.red);
+              _leftLightAnim.Play("lightOn");
+              _rightLightAnim.Play("lightOn");
        }
        
        // Method for binding and writing data to .csv file.
        /*
         * AddRecord function is mostly copied from Max O'Didily's YouTube video: https://www.youtube.com/watch?v=vDpww7HsdnM&ab_channel=MaxO%27Didily.
         */
-       private void AddRecord(string _experimentID, float _RT, string _compatibility, string _color, string _irrelevantStimulus, string _response, string _correctResponse, bool _correctness, string filepath)
+       private void AddRecord(int participantID, int blockCount, int trialCount, string _experimentID, float _RT, string _compatibility, string _color, string _irrelevantStimulus, string _response, string _correctResponse, bool _correctness, string filepath)
        {
               try
               {
                      // Instantiate StreamWriter object and write line to file including all recorded variables.
                      using (StreamWriter file = new StreamWriter(@filepath, true))
                      {
-                            file.WriteLine(_experimentID + "," + _RT + "," + _compatibility + "," + _color + "," + _irrelevantStimulus + "," + _response + "," + _correctResponse + "," + _correctness);
+                            file.WriteLine(participantID + "," + blockCount + "," + trialCount + "," + _experimentID + "," + _RT + "," + _compatibility + "," + _color + "," + _irrelevantStimulus + "," + _response + "," + _correctResponse + "," + _correctness);
                      }
               }
               catch (Exception ex)
