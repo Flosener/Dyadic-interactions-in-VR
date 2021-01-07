@@ -5,9 +5,9 @@
 This is the repository for the Unity project that builds the basis for a replication study of Experiment 1 in the paper "Representing others’ actions: just like one’s own?" (Sebanz, Knoblich, Prinz, 2003) for a course at the University of Osnabrück.
 <br>
 <br>
-To use this application, start a builded version (Builds/HarryPotter) on two PC's each, both with a VR headset and controllers connected. You also need SteamVR. The current version supports and works properly with the Oculus Rift, though for using other headsets that are supported by SteamVR you only have to re-define the actions via SteamVR Input.
+To use this application, start the project on two PC's each, both with a VR headset and controllers connected. You also need SteamVR. The current version supports and works properly with the Oculus Rift, though for using other headsets that are supported by SteamVR you only have to re-define the actions via SteamVR Input.
 After starting both applications you can individually do experiment 1 and 2. <br>
-[!] For joining the (networked) experiment 3, one participant has to join as a host, the other as a client after the host (the order is important!). The client has to use the host's IP4 adress to join. To find the IP4, type "ipconfig" into the command line of the host (Windows) or search in the system preferences under network settings (Mac). <br>
+[!] For joining the (networked) experiment 3, one participant has to join as a host, the other as a client after the host (the order is important!). The client has to use the host's IPv4 adress to join. This IPv4 address should be shown in the corner of the host's screen after joining the experiment. If it does not (due to different screen sizes) find the IPv4 by typing "ipconfig" into the command line of the host (Windows) or search in the system preferences under network settings (Mac). <br>
 The results of the experiments are saved in the "results.txt" in Assets/Results.
 
 ![entranceHall](https://user-images.githubusercontent.com/57441991/101847194-f2b16080-3b52-11eb-89d9-faf2b4c43164.PNG)
